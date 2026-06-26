@@ -1,0 +1,6 @@
+numpy==2.5.0
+opencv-python==4.13.0.92
+torch==2.12.0
+torchvision==0.27.0
+ultralytics==8.4.75
+scikit-image==0.26.0

@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 
 
-model = YOLO('c:/Users/olive/OneDrive/Documents/Tomato Dataset/CVResults/content/runs/detect/train/weights/last.pt')  # or another version of YOLOv8 (e.g., yolov8s.pt for small)
+model = YOLO('./CVResults/content/runs/detect/train/weights/last.pt')  # or another version of YOLOv8 (e.g., yolov8s.pt for small)
 
 
 cap = cv2.VideoCapture(0)
@@ -26,8 +26,11 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    elif cv2.getWindowProperty('frame', cv2.WND_PROP_VISIBLE) < 1:
-        break
+    try:
+        if cv2.getWindowProperty('frame', cv2.WND_PROP_VISIBLE) < 1:
+            break
+    except cv2.error:
+         break
 
 cap.release()
 

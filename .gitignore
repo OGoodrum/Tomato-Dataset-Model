@@ -1,0 +1,17 @@
+# Dataset directories
+PlantVillage/
+Tomato leaf diseases dataset for Object Detection/
+
+# Image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.webp
+
+# Python cache
+__pycache__/
+*.pyc
