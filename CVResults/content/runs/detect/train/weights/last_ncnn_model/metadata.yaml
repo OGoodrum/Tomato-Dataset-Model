@@ -1,0 +1,28 @@
+description: Ultralytics YOLOv10n model trained on /content/Tomato leaf diseases dataset
+  for Object Detection/Dataset without augmentation/data.yaml
+author: Ultralytics
+date: '2026-06-29T16:31:42.197594'
+version: 8.4.75
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: Early Blight
+  1: Healthy
+  2: Late Blight
+  3: Leaf Miner
+  4: Leaf Mold
+  5: Mosaic Virus
+  6: Septoria
+  7: Spider Mites
+  8: Yellow Leaf Curl Virus
+args:
+  batch: 1
+  half: false
+channels: 3
+end2end: false
