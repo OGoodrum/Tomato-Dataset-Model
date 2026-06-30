@@ -1,6 +1,6 @@
 import os                                                                                                                                   
 import cv2                                                                                                                                  
-from flask import Flask, Response, render_code, render_template_string                                                                      
+from flask import Flask, Response, render_template_string                                                                      
 from ultralytics import YOLO                                                                                                                
                                                                                                                                             
 app = Flask(__name__)                                                                                                                       
@@ -20,28 +20,38 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Lower resolutions improve performance
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)                                                                                                     
                                                                                                                                             
 def generate_frames():                                                                                                                      
+    print("[DEBUG] Started generate_frames generator...")                                                                                   
+    if not cap.isOpened():                                                                                                                  
+        print("[DEBUG] Error: Camera is not open!")                                                                                         
+        return                                                                                                                              
+                                                                                                                                            
     while True:                                                                                                                             
         success, frame = cap.read()                                                                                                         
         if not success:                                                                                                                     
+            print("[DEBUG] Error: Failed to read frame from camera.")                                                                       
             break                                                                                                                           
                                                                                                                                             
         # Run inference (stream=True optimizes memory; conf=0.5 filters early)                                                              
-        results = model.predict(frame, conf=0.5, verbose=False, stream=True)                                                                
-                                                                                                                                            
-        for r in results:                                                                                                                   
-            # Render bounding boxes and labels directly onto the frame                                                                      
-            frame = r.plot()                                                                                                                
+        try:                                                                                                                                
+            results = model.predict(frame, conf=0.5, verbose=False, stream=True)                                                            
+            for r in results:                                                                                                               
+                # Render bounding boxes and labels directly onto the frame                                                                  
+                frame = r.plot()                                                                                                            
+        except Exception as e:                                                                                                              
+            print(f"[DEBUG] Model inference failed: {e}")                                                                                   
+            break                                                                                                                           
                                                                                                                                             
         # Encode the frame in JPEG format                                                                                                   
         ret, buffer = cv2.imencode('.jpg', frame)                                                                                           
         if not ret:                                                                                                                         
+            print("[DEBUG] Error: Failed to encode frame to JPEG.")                                                                         
             continue                                                                                                                        
                                                                                                                                             
         frame_bytes = buffer.tobytes()                                                                                                      
                                                                                                                                             
         # Yield the image block using multipart/x-mixed-replace mimetype                                                                    
         yield (b'--frame\r\n'                                                                                                               
-                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')                                                                 
+                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')                                                                                                                                  
                                                                                                                                             
 # Simple HTML Template to view the stream                                                                                                   
 INDEX_HTML = """                                                                                                                            
