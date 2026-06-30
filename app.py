@@ -6,10 +6,10 @@ from ultralytics import YOLO
 app = Flask(__name__)                                                                                                                       
                                                                                                                                             
 # Load the optimized model (NCNN format is highly recommended for RPi)                                                                      
-MODEL_PATH = "last_ncnn_model"  # Path to your exported NCNN model directory                                                                
+MODEL_PATH = "./CVResults/content/runs/detect/train/weights/last_ncnn_model"  # Path to your exported NCNN model directory                                                                
 if not os.path.exists(MODEL_PATH):                                                                                                          
     # Fallback to PT file if NCNN is not exported yet                                                                                       
-    MODEL_PATH = "last.pt"                                                                                                                  
+    MODEL_PATH = "./CVResults/content/runs/detect/train/weights/last.pt"                                                                                                                  
                                                                                                                                             
 print(f"Loading model: {MODEL_PATH}...")                                                                                                    
 model = YOLO(MODEL_PATH)                                                                                                                    
