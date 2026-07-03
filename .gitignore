@@ -16,5 +16,6 @@ Tomato leaf diseases dataset for Object Detection/
 __pycache__/
 *.pyc
 
+.env
+
 AI Generated Infrastructure Plan.md
-service_role API key.txt

@@ -7,6 +7,10 @@ from ultralytics import YOLO
 import sentry_sdk
 import logging
 from supabase import create_client, Client
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize Sentry for error tracking
 sentry_sdk.init(
@@ -41,9 +45,8 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Lower resolutions improve performance
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 # Initialize Supabase Client
-with open("service_role API key.txt", "r") as f: # service_role key
-    SUPABASE_KEY = f.read().strip()                                                                     
-SUPABASE_URL = "https://your-project-url.supabase.co"                                             
+SUPABASE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY")  # Ensure                                                                    
+SUPABASE_URL = os.getenv("SUPABASE_URL")  # Ensure this is set in your .env file                                             
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Define your device ID (must match what is registered in the 'devices' table)                        
