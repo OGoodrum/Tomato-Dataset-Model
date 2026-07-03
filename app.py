@@ -1,7 +1,6 @@
 import time
 import os
-import threading
-import psutil                                                                                                                                  
+import threading                                                                                                                                 
 import cv2                                                                                                                                  
 from flask import Flask, Response, render_template                                                                     
 from ultralytics import YOLO
