@@ -1,9 +1,10 @@
 import os                                                                                                                                   
 import cv2                                                                                                                                  
-from flask import Flask, Response, render_template_string                                                                      
+from flask import Flask, Response, render_template                                                                     
 from ultralytics import YOLO
 import sentry_sdk
 import logging
+from supabase import create_client
 
 # Initialize Sentry for error tracking
 sentry_sdk.init(
@@ -70,47 +71,12 @@ def generate_frames():
         # Yield the image block using multipart/x-mixed-replace mimetype                                                                    
         yield (b'--frame\r\n'                                                                                                               
                 b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')                                                                                                                                  
-                                                                                                                                            
-# Simple HTML Template to view the stream                                                                                                   
-INDEX_HTML = """                                                                                                                            
-<!DOCTYPE html>                                                                                                                             
-<html>                                                                                                                                      
-<head>                                                                                                                                      
-    <title>YOLOv8 Tomato Detection Stream</title>                                                                                           
-    <style>                                                                                                                                 
-        body {                                                                                                                              
-            font-family: Arial, sans-serif;                                                                                                 
-            background: #121212;                                                                                                            
-            color: #ffffff;                                                                                                                 
-            text-align: center;                                                                                                             
-            padding: 20px;                                                                                                                  
-        }                                                                                                                                   
-        h1 { color: #ff5722; }                                                                                                              
-        .stream-container {                                                                                                                 
-            margin: 20px auto;                                                                                                              
-            border: 5px solid #ff5722;                                                                                                      
-            border-radius: 10px;                                                                                                            
-            display: inline-block;                                                                                                          
-            overflow: hidden;                                                                                                               
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);                                                                                         
-        }                                                                                                                                   
-        img { display: block; max-width: 100%; height: auto; }                                                                              
-    </style>                                                                                                                                
-</head>                                                                                                                                     
-<body>                                                                                                                                      
-    <h1>Live Tomato Detection Stream</h1>                                                                                                   
-    <p>Streaming from Raspberry Pi</p>                                                                                                      
-    <div class="stream-container">                                                                                                          
-        <img src="/video_feed" width="640" height="480" />                                                                                  
-    </div>                                                                                                                                  
-</body>                                                                                                                                     
-</html>                                                                                                                                     
-"""                                                                                                                                         
+                                                                                                                                                                                                                                                                             
                                                                                                                                             
 @app.route('/')                                                                                                                             
 def index():                                                                                                                                
     """Video streaming home page."""                                                                                                        
-    return render_template_string(INDEX_HTML)                                                                                               
+    return render_template('index.html')                                                                                               
                                                                                                                                             
 @app.route('/video_feed')                                                                                                                   
 def video_feed():                                                                                                                           
