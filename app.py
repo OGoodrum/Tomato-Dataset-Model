@@ -119,6 +119,5 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')                                                                   
                                                                                                                                             
 if __name__ == '__main__':                                                                                                                  
-    # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs.
-    division_by_zero = 1 / 0                                                                      
+    # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs                                                                     
     app.run(host='0.0.0.0', port=5000, threaded=True)
