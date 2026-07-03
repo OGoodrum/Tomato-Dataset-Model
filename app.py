@@ -1,9 +1,27 @@
 import os                                                                                                                                   
 import cv2                                                                                                                                  
 from flask import Flask, Response, render_template_string                                                                      
-from ultralytics import YOLO                                                                                                                
+from ultralytics import YOLO
+import sentry_sdk
+import logging
+
+# Initialize Sentry for error tracking
+sentry_sdk.init(
+    dsn="https://e80b87c7a6d9121f37069f69b2f53329@o4511668378992640.ingest.us.sentry.io/4511668425785344",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+    # Enable sending logs to Sentry
+    enable_logs=True,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for tracing.
+    traces_sample_rate=1.0,
+    # Set profile_session_sample_rate to 1.0 to profile 100%
+    # of profile sessions.
+    profile_session_sample_rate=1.0,
+)
                                                                                                                                             
-app = Flask(__name__)                                                                                                                       
+app = Flask(__name__)                                                                                                                    
                                                                                                                                             
 # Load the optimized model (NCNN format is highly recommended for RPi)                                                                      
 MODEL_PATH = "./CVResults/content/runs/detect/train/weights/last_ncnn_model"  # Path to your exported NCNN model directory                                                                
@@ -101,5 +119,6 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')                                                                   
                                                                                                                                             
 if __name__ == '__main__':                                                                                                                  
-    # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs.                                                                      
+    # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs.
+    division_by_zero = 1 / 0                                                                      
     app.run(host='0.0.0.0', port=5000, threaded=True)
