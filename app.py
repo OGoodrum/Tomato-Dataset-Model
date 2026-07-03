@@ -44,9 +44,9 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Lower resolutions improve performance                                                             
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-# Initialize Supabase Client
-SUPABASE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY")  # Ensure                                                                    
-SUPABASE_URL = os.getenv("SUPABASE_URL")  # Ensure this is set in your .env file                                             
+# Initialize Supabase Client                                                                
+SUPABASE_URL = os.getenv("SUPABASE_URL")  # Ensure this is set in your .env file
+SUPABASE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY")                                             
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Define your device ID (must match what is registered in the 'devices' table)                        
