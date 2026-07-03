@@ -50,7 +50,41 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Define your device ID (must match what is registered in the 'devices' table)                        
 DEVICE_ID = 1
 
-def log_detection(image_url, total, ripe=0, unripe=0, diseased=0):                                          
+LOG_INTERVAL = 600 # Log to the database every 10 minutes (600 seconds)
+
+def background_db_logger():                                                                           
+    print("[DB Logger] Started background logger thread.")                                                                                
+                                                                                                        
+    while True:                                                                                       
+        time.sleep(LOG_INTERVAL)                                                                      
+                                                                                                        
+        # 1. Grab a frame from the running camera                                                     
+        success, frame = cap.read()                                                                   
+        if not success or frame is None:                                                              
+            continue                                                                                  
+                                                                                                        
+        # 2. Run inference                                                                            
+        results = model.predict(frame, conf=0.5, verbose=False)                                       
+        for r in results:                                                                             
+            # Get counts                                                                              
+            total = len(r.boxes)                                                                      
+            # Assuming class 0 = ripe, 1 = unripe, 2 = diseased (change based on your model.names)    
+            classes = r.boxes.cls.tolist()                                                            
+                                                               
+            #TODO: Adjust class indices based on your model's class mapping                       
+
+            # 3. Save the annotated frame locally                                                     
+            annotated_frame = r.plot()                                                                
+            cv2.imwrite("temp_snapshot.jpg", annotated_frame)                                         
+                                                                                                        
+            # 4. Upload snapshot to storage bucket and get public URL                                 
+            # (See previous steps for Cloudflare R2 / Supabase Storage upload)                        
+            public_image_url = "https://your-storage-bucket.com/snapshot.jpg"                         
+                                                                                                        
+            # 5. Insert to Supabase DB                                                                
+            log_detection(public_image_url, total)
+
+def log_detection(image_url, total=0, ripe=0, unripe=0, diseased=0):                                          
     try:                                                                                              
         # Optional: Get Pi CPU temperature                                                            
         cpu_temp = None
@@ -126,5 +160,9 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')                                                                   
                                                                                                                                             
 if __name__ == '__main__':                                                                                                                  
-    # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs                                                                     
+    # Start the background logger thread
+    logger_thread = threading.Thread(target=background_db_logger, daemon=True)                                                                  
+    logger_thread.start()
+
+    # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs
     app.run(host='0.0.0.0', port=5000, threaded=True)
