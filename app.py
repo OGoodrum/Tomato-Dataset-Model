@@ -1,10 +1,13 @@
-import os                                                                                                                                   
+import time
+import os
+import threading
+import psutil                                                                                                                                  
 import cv2                                                                                                                                  
 from flask import Flask, Response, render_template                                                                     
 from ultralytics import YOLO
 import sentry_sdk
 import logging
-from supabase import create_client
+from supabase import create_client, Client
 
 # Initialize Sentry for error tracking
 sentry_sdk.init(
@@ -36,7 +39,45 @@ model = YOLO(MODEL_PATH)
 # Initialize webcam                                                                                                                         
 cap = cv2.VideoCapture(0)                                                                                                                   
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Lower resolutions improve performance                                                             
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)                                                                                                     
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+# Initialize Supabase Client
+with open("service_role API key.txt", "r") as f: # service_role key
+    SUPABASE_KEY = f.read().strip()                                                                     
+SUPABASE_URL = "https://your-project-url.supabase.co"                                             
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Define your device ID (must match what is registered in the 'devices' table)                        
+DEVICE_ID = 1
+
+def log_detection(image_url, total, ripe=0, unripe=0, diseased=0):                                          
+    try:                                                                                              
+        # Optional: Get Pi CPU temperature                                                            
+        cpu_temp = None
+
+        try:                                                                                          
+            with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:                             
+                cpu_temp = round(int(f.read()) / 1000.0, 1)                                           
+        except Exception:                                                                             
+            pass  # Fallback if not running on Pi                                                     
+                                                                                                        
+        data = {                                                                                      
+            "device_id": DEVICE_ID,                                                                   
+            "image_url": image_url,                                                                   
+            "total_count": total,                                                                     
+            "ripe_count": ripe,                                                                       
+            "unripe_count": unripe,                                                                   
+            "diseased_count": diseased,                                                               
+            "cpu_temp": cpu_temp                                                                      
+        }                                                                                             
+                                                                                                        
+        # Insert row into Supabase                                                                    
+        response = supabase.table("tomato_detections").insert(data).execute()                         
+        print(f"[DB] Logged detection to Supabase: {total} tomatoes found.")                          
+        return response.data                                                                          
+    except Exception as e:                                                                            
+        print(f"[DB] Error logging to Supabase: {e}")                                                 
+        return None
                                                                                                                                             
 def generate_frames():                                                                                                                      
     print("[DEBUG] Started generate_frames generator...")                                                                                   
