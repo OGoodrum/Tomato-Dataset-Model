@@ -52,7 +52,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Define your device ID (must match what is registered in the 'devices' table)                        
 DEVICE_ID = os.getenv("DEVICE_ID", 1)  # Default to "1" if not set in .env
 
-LOG_INTERVAL = 600 # Log to the database every 10 minutes (600 seconds)
+LOG_INTERVAL = 30 # Log to the database every 10 minutes (600 seconds)
 
 def background_db_logger():                                                                           
     print("[DB Logger] Started background logger thread.")                                                                                
