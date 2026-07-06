@@ -39,7 +39,7 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
 )
 
-BUCKET_NAME = os.getenv("CLOUDFLARE_BUCKET_NAME")
+BUCKET_NAME = os.getenv("CLOUDFLARE_BUCKET_NAME", "tomato-detection-snapshots")
                                                                                                                                             
 app = Flask(__name__)                                                                                                                    
                                                                                                                                             
