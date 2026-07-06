@@ -2,6 +2,7 @@ import time
 import os
 import threading
 import logging
+from datetime import datetime
 
 import cv2
 from ultralytics import YOLO
@@ -95,10 +96,12 @@ def background_db_logger():
             # 4. Upload snapshot to storage bucket and get public URL                                 
             # (See previous steps for Cloudflare R2 / Supabase Storage upload)
             
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+
             s3.upload_file(
                 Filename="temp_snapshot.jpg",
                 Bucket=BUCKET_NAME,
-                Key="snapshot.jpg",
+                Key=f"{timestamp}_snapshot_device_{DEVICE_ID}.jpg",
             )
             print("[DB Logger] Upload successful!")
                        
