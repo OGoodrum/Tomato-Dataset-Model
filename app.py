@@ -39,7 +39,7 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
 )
 
-BUCKET_NAME = os.getenv("CLOUDFLARE_BUCKET_NAME", "tomato-detection-snapshots")
+BUCKET_NAME = os.getenv("CLOUDFLARE_BUCKET_NAME")
                                                                                                                                             
 app = Flask(__name__)                                                                                                                    
                                                                                                                                             
@@ -96,9 +96,9 @@ def background_db_logger():
             # (See previous steps for Cloudflare R2 / Supabase Storage upload)
             
             s3.upload_file(
-                "temp_snapshot.jpg",
-                BUCKET_NAME,
-                "uploaded_image.png"
+                Filename="temp_snapshot.jpg",
+                Bucket=BUCKET_NAME,
+                Key="snapshot.jpg",
             )
             print("[DB Logger] Upload successful!")
                        
