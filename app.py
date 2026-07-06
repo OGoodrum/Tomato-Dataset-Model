@@ -101,16 +101,16 @@ def background_db_logger():
             s3.upload_file(
                 Filename="temp_snapshot.jpg",
                 Bucket=BUCKET_NAME,
-                Key=f"{timestamp}_snapshot_device_{DEVICE_ID}.jpg",
+                Key=f"device_{DEVICE_ID}/{timestamp}_snapshot.jpg"
             )
             print("[DB Logger] Upload successful!")
                        
-            public_image_url = "https://your-storage-bucket.com/snapshot.jpg"                         
+            public_image_url = f"https://{BUCKET_NAME}.com/device_{DEVICE_ID}/{timestamp}_snapshot.jpg"                         
                                                                                                         
             # 5. Insert to Supabase DB                                                                
-            log_detection(public_image_url, total)
+            log_detection(image_url=public_image_url, total=total, image_key=f"device_{DEVICE_ID}/{timestamp}_snapshot.jpg")
 
-def log_detection(image_url, total=0, ripe=0, unripe=0, diseased=0):                                          
+def log_detection(image_url, total=0, ripe=0, unripe=0, diseased=0, image_key=None):                                          
     try:                                                                                              
         # Optional: Get Pi CPU temperature                                                            
         cpu_temp = None
@@ -128,7 +128,8 @@ def log_detection(image_url, total=0, ripe=0, unripe=0, diseased=0):
             "ripe_count": ripe,                                                                       
             "unripe_count": unripe,                                                                   
             "diseased_count": diseased,                                                               
-            "cpu_temp": cpu_temp                                                                      
+            "cpu_temp": cpu_temp,
+            "image_key": image_key
         }                                                                                             
                                                                                                         
         # Insert row into Supabase                                                                    
