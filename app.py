@@ -39,7 +39,7 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
 )
 
-bucket_name = os.getenv("CLOUDFLARE_BUCKET_NAME")
+BUCKET_NAME = os.getenv("CLOUDFLARE_BUCKET_NAME")
                                                                                                                                             
 app = Flask(__name__)                                                                                                                    
                                                                                                                                             
@@ -97,7 +97,7 @@ def background_db_logger():
             
             s3.upload_file(
                 Filename="temp_snapshot.jpg",
-                Bucket=bucket_name,
+                Bucket=BUCKET_NAME,
                 Key="uploaded_image.png"
             )
             print("[DB Logger] Upload successful!")
