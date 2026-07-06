@@ -1,12 +1,16 @@
 import time
 import os
-import threading                                                                                                                                 
-import cv2                                                                                                                                  
-from flask import Flask, Response, render_template                                                                     
-from ultralytics import YOLO
-import sentry_sdk
+import threading
 import logging
+
+import cv2
+from ultralytics import YOLO
+
+from flask import Flask, Response, render_template                                                                     
+import sentry_sdk
+
 from supabase import create_client, Client
+import boto3
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -27,6 +31,15 @@ sentry_sdk.init(
     # of profile sessions.
     profile_session_sample_rate=1.0,
 )
+
+s3 = boto3.client(
+    's3',
+    endpoint_url=os.getenv("CLOUDFLARE_R2_ENDPOINT"),
+    aws_access_key_id=os.getenv("CLOUDFLARE_R2_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("CLOUDFLARE_R2_SECRET_ACCESS_KEY")
+)
+
+bucket_name = os.getenv("CLOUDFLARE_BUCKET_NAME")
                                                                                                                                             
 app = Flask(__name__)                                                                                                                    
                                                                                                                                             
@@ -80,7 +93,15 @@ def background_db_logger():
             cv2.imwrite("temp_snapshot.jpg", annotated_frame)                                         
                                                                                                         
             # 4. Upload snapshot to storage bucket and get public URL                                 
-            # (See previous steps for Cloudflare R2 / Supabase Storage upload)                        
+            # (See previous steps for Cloudflare R2 / Supabase Storage upload)
+            
+            s3.upload_file(
+                Filename="temp_snapshot.jpg",
+                Bucket=bucket_name,
+                Key="uploaded_image.png"
+            )
+            print("[DB Logger] Upload successful!")
+                       
             public_image_url = "https://your-storage-bucket.com/snapshot.jpg"                         
                                                                                                         
             # 5. Insert to Supabase DB                                                                
