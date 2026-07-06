@@ -96,9 +96,9 @@ def background_db_logger():
             # (See previous steps for Cloudflare R2 / Supabase Storage upload)
             
             s3.upload_file(
-                Filename="temp_snapshot.jpg",
-                Bucket=BUCKET_NAME,
-                Key="uploaded_image.png"
+                "temp_snapshot.jpg",
+                BUCKET_NAME,
+                "uploaded_image.png"
             )
             print("[DB Logger] Upload successful!")
                        
