@@ -1,4 +1,4 @@
-### How the Data Flows (Pi ➡️ Cloud ➡️ Website)
+## How the Data Flows (Pi ➡️ Cloud ➡️ Website)
 
 ```mermaid
 graph TD
@@ -16,7 +16,7 @@ graph TD
     end
 
     subgraph User ["Web Browser"]
-        Website["Vercel Frontend"]
+        Website["Netlify Frontend"]
     end
 
     %% Cross-subgraph connections
