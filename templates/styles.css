@@ -1,3 +1,4 @@
+
 body {
     font-family: Arial, sans-serif;
     background: #121212;
@@ -5,7 +6,12 @@ body {
     text-align: center;
     padding: 20px;
 }
-h1 { color: #ff5722; }
+
+h1 { 
+    color: #ff5722;
+    font-family: "JetBrains Mono", monospace;
+}
+
 .stream-container {
     margin: 20px auto;
     border: 5px solid #ff5722;
@@ -14,4 +20,9 @@ h1 { color: #ff5722; }
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
-img { display: block; max-width: 100%; height: auto; }
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
