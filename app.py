@@ -67,6 +67,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 DEVICE_ID = os.getenv("DEVICE_ID", 1)  # Default to "1" if not set in .env
 
 LOG_INTERVAL = 30 # Log to the database every 10 minutes (600 seconds)
+LOG_DATABASE = False  # Set to False to disable database logging (useful for testing)
 
 def background_db_logger():                                                                           
     print("[DB Logger] Started background logger thread.")                                                                                
@@ -186,10 +187,12 @@ def video_feed():
     return Response(generate_frames(),                                                                                                      
                     mimetype='multipart/x-mixed-replace; boundary=frame')                                                                   
                                                                                                                                             
-if __name__ == '__main__':                                                                                                                  
-    # Start the background logger thread
-    logger_thread = threading.Thread(target=background_db_logger, daemon=True)                                                                  
-    logger_thread.start()
+if __name__ == '__main__':
+    if LOG_DATABASE:
+        print("[INFO] Database logging is ENABLED.")                                                                                                                  
+        # Start the background logger thread
+        logger_thread = threading.Thread(target=background_db_logger, daemon=True)                                                                  
+        logger_thread.start()
 
     # RPi default port is 5000. Host 0.0.0.0 listens to all local IPs
     app.run(host='0.0.0.0', port=5000, threaded=True)
