@@ -5,14 +5,13 @@ graph TD
     subgraph Edge ["Raspberry Pi"]
         Camera[Webcam] --> Inference["YOLO Detection"]
         LocalStorage[("Local SSD/SD")]
-        Inference -->|Save clip locally| LocalStorage
+        Inference -->|Save image locally| LocalStorage
     end
 
     subgraph CloudServices ["Cloud Infrastructure"]
         CloudStorage["Cloudflare R2 Storage"]
-        CloudBackend["Render/Railway API"]
+        CloudBackend["Cloudflare Tunnel"]
         DB[("Supabase DB")]
-        CloudBackend -->|Save metadata| DB
     end
 
     subgraph User ["Web Browser"]
@@ -20,8 +19,9 @@ graph TD
     end
 
     %% Cross-subgraph connections
-    Inference -->|Upload video file| CloudStorage
-    Inference -->|HTTP POST JSON data| CloudBackend
+    Inference -->|Upload image file| CloudStorage
+    Inference -->|Expose Live Video| CloudBackend
     Website -->|Fetch charts & logs| DB
-    Website -->|Request video playback| CloudStorage
+    Website -->|Request historical image| CloudStorage
+    CloudBackend -->|Retrieve Live Video| Website
 ```
