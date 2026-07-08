@@ -5,10 +5,12 @@ let cameraFeeds = ["https://actions-commands-gore-motorcycle.trycloudflare.com/v
 function updateCameraFeeds() {
     let newInnerHTML = '';
     cameraFeeds.forEach((feed, index) => {
-        newInnerHRML += `
+        newInnerHTML += `
         <li class="stream-container"><img src=${feed} width="640" height="480" /></li>
         `
     });
 
     cameraList.innerHTML = newInnerHTML;
 }
+
+updateCameraFeeds();
