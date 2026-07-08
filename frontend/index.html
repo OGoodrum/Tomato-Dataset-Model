@@ -15,7 +15,7 @@
     </header>
 
     <nav>
-        <ul>
+        <ul class="navBar">
             <li><a href="index.html">Home Page</a></li>
             <li><a href="historical_images.html">Historical Images</a></li>
             <li><a href="live_videos.html">Live Videos</a></li>
@@ -26,8 +26,10 @@
     <main>
         <p>Streaming from Raspberry Pi</p>
 
-        <div class="stream-container">
-            <img src="https://actions-commands-gore-motorcycle.trycloudflare.com/video_feed" width="640" height="480" />
+        <div>
+            <ul class="cameraList">
+                <li class="stream-container"><img src="https://actions-commands-gore-motorcycle.trycloudflare.com/video_feed" width="640" height="480" /></li>
+            </ul>
         </div>
     </main>
 
@@ -36,4 +38,5 @@
     </footer>
 
 </body>
+<script src="index.js"></script>
 </html>

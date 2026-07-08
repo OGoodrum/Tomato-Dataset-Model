@@ -12,7 +12,7 @@ h1 {
     font-family: "JetBrains Mono", monospace;
 }
 
-nav ul{
+.navBar{
     padding-left: 0px;
     list-style: none;
     text-align: center;
@@ -22,7 +22,7 @@ nav ul{
     flex-wrap: wrap;
 }
 
-nav li{
+.navBar li{
     background-color: #ff5722;
     border-radius: 25px;
     margin-right: 0.05vw;
