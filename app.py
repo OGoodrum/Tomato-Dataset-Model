@@ -106,7 +106,7 @@ def background_db_logger():
             )
             print("[DB Logger] Upload successful!")
                        
-            public_image_url = f"https://{BUCKET_NAME}.com/device_{DEVICE_ID}/{timestamp}_snapshot.jpg"                         
+            public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev.com/device_{DEVICE_ID}/{timestamp}_snapshot.jpg"                         
                                                                                                         
             # 5. Insert to Supabase DB                                                                
             log_detection(image_url=public_image_url, total=total, image_key=f"device_{DEVICE_ID}/{timestamp}_snapshot.jpg")
