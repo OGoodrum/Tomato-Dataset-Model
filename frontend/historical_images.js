@@ -1,35 +1,52 @@
+// Load Supabase JS client from CDN
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+
 const imageArea = document.querySelector('.imageArea');
 
-import {
-  S3Client,
-  ListBucketsCommand,
-  ListObjectsV2Command,
-  GetObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
 
-const S3 = new S3Client({
-  region: "auto", // Required by SDK but not used by R2
-  // Provide your Cloudflare account ID
-  endpoint: `https://${ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  // Retrieve your S3 API credentials for your R2 bucket via API tokens (see: https://developers.cloudflare.com/r2/api/tokens)
-  credentials: {
-    accessKeyId: ACCESS_KEY_ID,
-    secretAccessKey: SECRET_ACCESS_KEY,
-  },
-});
+const SUPABASE_URL = "https://vpofkrbxyaxvzryhmdte.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_T_AjtavafPYU-ciQ4q_Lfg_t08Xv47P"; // Safe for browser
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let images = [];
 
 function updateImageArea() {
     let newInnerHTML = '';
-    images.forEach((image, index) => {
-        newInnerHTML += `
-        <li class="image-container"><img src=${image} width="640" height="480" /></li>
-        `
+    images.forEach((item) => {
+        if (item.image_url) {
+            const formattedTime = new Date(item.created_at).toLocaleString();
+            newInnerHTML += `
+            <li class="image-container">
+                <img src="${item.image_url}" width="640" height="480" />
+                <div class="timestamp">${formattedTime}</div>
+            </li>
+            `;
+        }
     });
 
     imageArea.innerHTML = newInnerHTML;
 }
 
-updateImageArea();
+
+async function loadImagesFromSupabase() {
+    try {
+        const { data, error } = await supabase
+            .from('tomato_detections')
+            .select('image_url, created_at')
+            .order('created_at', { ascending: false }); // Show newest first
+
+        if (error) throw error;
+
+        if (data) {
+            images = data;
+            updateImageArea();
+        }
+    } catch (err) {
+        console.error("Error loading images from Supabase:", err);
+    }
+}
+
+
+loadImagesFromSupabase();
