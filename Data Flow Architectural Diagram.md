@@ -19,7 +19,7 @@ graph TD
     end
 
     %% Cross-subgraph connections
-    Inference -->|Upload image file| CloudStorage
+    Inference -->|Upload image file via S3 API| CloudStorage
     Inference -->|Expose Live Video| CloudBackend
     Inference -->|Insert detection Metadata| DB
     Website -->|Fetch charts & logs| DB

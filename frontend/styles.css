@@ -12,6 +12,28 @@ h1 {
     font-family: "JetBrains Mono", monospace;
 }
 
+nav ul{
+    padding-left: 0px;
+    list-style: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav li{
+    background-color: #ff5722;
+    border-radius: 25px;
+    margin-right: 0.05vw;
+    margin-left: 0.05vw;
+    margin-top: 0.5vh;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
 .stream-container {
     margin: 20px auto;
     border: 5px solid #ff5722;
