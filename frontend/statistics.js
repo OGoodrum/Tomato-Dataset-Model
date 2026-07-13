@@ -42,4 +42,4 @@ async function fetchDetectionsCount() {
 
 // Call the function on page load
 fetchNumberOfImages();
-
+fetchDetectionsCount();

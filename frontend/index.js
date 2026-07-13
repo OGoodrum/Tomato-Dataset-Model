@@ -1,6 +1,6 @@
 const cameraList = document.querySelector('.cameraList');
 
-let cameraFeeds = ["https://epa-considering-except-processors.trycloudflare.com/video_feed"];
+let cameraFeeds = ["https://bikes-solved-subjects-club.trycloudflare.com/video_feed"];
 
 function updateCameraFeeds() {
     let newInnerHTML = '';
