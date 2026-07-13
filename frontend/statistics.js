@@ -24,6 +24,22 @@ async function fetchNumberOfImages() {
     statsContainer.innerText = data.length; // Display total number of images processed
 }
 
+async function fetchDetectionsCount() {
+    const { data, error } = await client
+        .from('tomato_detections')
+        .select('total_count', { count: 'exact' });
+
+    if (error) {
+        console.error("Error fetching detection count:", error);
+        document.getElementById('detectionsCount').innerText = "Failed to load data.";
+        return;
+    }
+
+    const statsContainer = document.getElementById('detectionsCount');
+    console.log("Fetched detection count:", data[0].total_count);
+    statsContainer.innerText = data[0].total_count;
+}
+
 // Call the function on page load
 fetchNumberOfImages();
 
