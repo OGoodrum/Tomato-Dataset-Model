@@ -1,4 +1,4 @@
-import { createClient } from 'npm:@supabase/supabase-js@2'
+import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
 // Initialize the Supabase client
 const SUPABASE_URL = "https://vpofkrbxyaxvzryhmdte.supabase.co";
@@ -10,7 +10,7 @@ const  client= createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 async function fetchNumberOfImages() {
     const { data, error } = await client
         .from('tomato_detections')
-        .select('*', { count: 'exact' }); // Get the exact count of rows
+        .select('*');
 
     if (error) {
         console.error("Error fetching data:", error);
@@ -21,7 +21,7 @@ async function fetchNumberOfImages() {
     // Render data dynamically into HTML
     const statsContainer = document.getElementById('totalImages');
     console.log("Fetched data:", data);
-    statsContainer.innerText = count; // Display total number of images processed
+    statsContainer.innerText = data.length; // Display total number of images processed
 }
 
 // Call the function on page load
