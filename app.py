@@ -43,7 +43,8 @@ s3 = boto3.client(
 
 BUCKET_NAME = os.getenv("CLOUDFLARE_BUCKET_NAME")
                                                                                                                                             
-app = Flask(__name__)                                                                                                                    
+app = Flask(__name__)
+CORS(app, resources={r"/video_feed": {"origins": "https://jazzy-basbousa-e19f1f.netlify.app/"}})                                                                                                           
                                                                                                                                             
 # Load the optimized model (NCNN format is highly recommended for RPi)                                                                      
 MODEL_PATH = "./CVResults/content/runs/detect/train/weights/last_ncnn_model"  # Path to your exported NCNN model directory                                                                
@@ -180,7 +181,7 @@ def generate_frames():
 @app.route('/')                                                                                                                             
 def index():                                                                                                                                
     """Video streaming home page."""                                                                                                        
-    return render_template('index.html')                                                                                               
+    return render_template('index.html')                                                                                              
                                                                                                                                             
 @app.route('/video_feed')                                                                                                                   
 def video_feed():                                                                                                                           
