@@ -71,3 +71,24 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+.stats-container {
+    margin: 20px auto;
+    padding: 20px;
+    border: 3px solid #ff5722;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+}
+
+.tomato-statistics {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px;
+    color: #ff5722;
+}
+
+.tomato-statistics p {
+    margin: 0;
+}
