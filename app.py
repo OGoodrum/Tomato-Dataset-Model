@@ -7,7 +7,8 @@ from datetime import datetime
 import cv2
 from ultralytics import YOLO
 
-from flask import Flask, Response, render_template                                                                     
+from flask import Flask, Response, render_template
+from flask_cors import CORS                                                                
 import sentry_sdk
 
 from supabase import create_client, Client
