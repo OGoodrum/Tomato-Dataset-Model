@@ -12,9 +12,10 @@ const detectionChartCtx = new Chart("detectionChart", {
         datasets: [{
             backgroundColor: '#ff5722',
             label: 'Detections Over Time',
-            data: data.
-    },
+            data: [], // Y-axis data (e.g., detection counts)
+        }],
     options: {}
+    }
 });
 
 async function fetchStatistics() {
