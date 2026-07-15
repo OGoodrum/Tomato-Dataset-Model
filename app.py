@@ -198,7 +198,7 @@ def statistics():
     """Statistics page."""                                                                                                        
     return render_template('statistics.html')
 
-@app.route('/video_feed.html')                                                                                                                   
+@app.route('/video_feed')                                                                                                                   
 def video_feed():                                                                                                                           
     """Video streaming route. Put this in the src attribute of an img tag."""                                                               
     return Response(generate_frames(),                                                                                                      
