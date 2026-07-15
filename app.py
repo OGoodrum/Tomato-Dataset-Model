@@ -183,22 +183,22 @@ def index():
     """Video streaming home page."""                                                                                                        
     return render_template('index.html')
 
-@app.route('/historical_images')                                                                                                                    
+@app.route('/historical_images.html')                                                                                                                    
 def historical_images():                                                                                                                    
     """Historical images page."""                                                                                                        
     return render_template('historical_images.html')
 
-@app.route('/live_videos')                                                                                                                    
+@app.route('/live_videos.html')                                                                                                                    
 def live_videos():                                                                                                                    
     """Live videos page."""                                                                                                        
     return render_template('live_videos.html')
 
-@app.route('/statistics')                                                                                                                    
+@app.route('/statistics.html')                                                                                                                    
 def statistics():                                                                                                                    
     """Statistics page."""                                                                                                        
     return render_template('statistics.html')
 
-@app.route('/video_feed')                                                                                                                   
+@app.route('/video_feed.html')                                                                                                                   
 def video_feed():                                                                                                                           
     """Video streaming route. Put this in the src attribute of an img tag."""                                                               
     return Response(generate_frames(),                                                                                                      
