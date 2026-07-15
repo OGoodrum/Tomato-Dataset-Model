@@ -25,16 +25,19 @@
     </nav>
 
     <main>
+        <h2>Detection Statistics</h2>
         <div class="stats-container">
-            <h2>Detection Statistics</h2>
             <div class="tomato-statistics">
                 <p>Total Images Processed: <span id="totalImages">Loading...</span></p>
                 <p>Detections Made: <span id="detectionsCount">Loading...</span></p>
             </div>
-            <div class="chart-container">
-                <canvas id="detectionChart" style="width: 100%; max-width: 700px;"></canvas>
-            </div>
             
+        </div>
+        <div class="stats-container">
+            <canvas id="detectionChart" style="width: 100%; max-width: 700px;"></canvas>
+        </div>
+        <div class="stats-container">
+            <canvas id="detectionClassChart" style="width: 100%; max-width: 700px;"></canvas>
         </div>
     </main>
 

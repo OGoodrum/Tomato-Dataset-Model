@@ -5,18 +5,7 @@ const SUPABASE_URL = "https://vpofkrbxyaxvzryhmdte.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_T_AjtavafPYU-ciQ4q_Lfg_t08Xv47P"; // Safe for browser
 
 const  client= createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const detectionChartCtx = new Chart("detectionChart", {
-    type: 'line',
-    data: {
-        labels: [], // X-axis labels (e.g., timestamps)
-        datasets: [{
-            backgroundColor: '#ff5722',
-            label: 'Detections Over Time',
-            data: [], // Y-axis data (e.g., detection counts)
-        }],
-    options: {}
-    }
-});
+
 
 async function fetchStatistics() {
 
@@ -33,10 +22,57 @@ async function fetchStatistics() {
     const totalImagesContainer = document.getElementById('totalImages');
     const detectionsCountContainer = document.getElementById('detectionsCount');
 
-    console.log("Fetched data:", data);
+    //console.log("Fetched data:", data);
 
     totalImagesContainer.innerText = data.length;
     detectionsCountContainer.innerText = data.reduce((sum, item) => sum + item.total_count, 0);
+
+    createLineChart(data);
+
+}
+
+function createLineChart(data) {
+    const detectionChartCtx = new Chart("detectionChart", {
+        type: 'line',
+        data: {
+            labels: data.map(item => new Date(item.created_at).toLocaleDateString()), // X-axis labels formatted (date only)
+            datasets: [{
+                label: 'Total Detections Over Time',
+                data: data.filter(item => item.total_count >= 0).map(item => item.total_count), // Y-axis data is total_count
+                borderColor: '#ff5722',
+                backgroundColor: 'rgba(255, 87, 34, 0.1)',
+                borderWidth: 2,
+                tension: 0.2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    console.log("Chart created with data:", data.filter(item => item.total_count >= 0).map(item => item.total_count));
+}
+
+function createPieChart(data) {
+    const detectionClassChartCtx = new Chart("detectionClassChart", {
+        type: 'pie',
+        data: {
+            labels: []
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Types of Detections",
+                font :{size:16}
+            }
+        }
+    });
 }
 
 // Call the function on page load

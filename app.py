@@ -147,7 +147,9 @@ def generate_frames():
     print("[DEBUG] Started generate_frames generator...")                                                                                   
     if not cap.isOpened():                                                                                                                  
         print("[DEBUG] Error: Camera is not open!")                                                                                         
-        return                                                                                                                              
+        return
+
+    print(model.names)  # Print class names for debugging                                                                                                                     
                                                                                                                                             
     while True:                                                                                                                             
         success, frame = cap.read()                                                                                                         
