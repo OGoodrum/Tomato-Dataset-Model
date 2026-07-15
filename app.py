@@ -178,7 +178,7 @@ def generate_frames():
                 b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')                                                                                                                                  
                                                                                                                                                                                                                                                                              
                                                                                                                                             
-@app.route('/')                                                                                                                             
+@app.route('/index.html')                                                                                                                             
 def index():                                                                                                                                
     """Video streaming home page."""                                                                                                        
     return render_template('index.html')
