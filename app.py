@@ -70,7 +70,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 DEVICE_ID = os.getenv("DEVICE_ID", 1)  # Default to "1" if not set in .env
 
 LOG_INTERVAL = 30 # Log to the database every 10 minutes (600 seconds)
-LOG_DATABASE = False  # Set to False to disable database logging (useful for testing)
+LOG_DATABASE = True  # Set to False to disable database logging (useful for testing)
 
 def background_db_logger():                                                                           
     print("[DB Logger] Started background logger thread.")                                                                                
@@ -89,7 +89,8 @@ def background_db_logger():
             # Get counts                                                                              
             total = len(r.boxes)                                                                      
             # Assuming class 0 = ripe, 1 = unripe, 2 = diseased (change based on your model.names)    
-            classes = r.boxes.cls.tolist()                                                            
+            classes = r.boxes.cls.tolist()
+            print(f"[DB Logger] Detected {total} objects: {classes}")                                                            
                                                                
             #TODO: Adjust class indices based on your model's class mapping                       
 
@@ -114,7 +115,7 @@ def background_db_logger():
             # 5. Insert to Supabase DB                                                                
             log_detection(image_url=public_image_url, total=total, image_key=f"device_{DEVICE_ID}/{timestamp}_snapshot.jpg")
 
-def log_detection(image_url, total=0, ripe=0, unripe=0, diseased=0, image_key=None):                                          
+def log_detection(image_url, total=0, ripe=0, unripe=0, image_key=None, early_blight=0, healthy=0, late_blight=0, leaf_miner=0, leaf_mold=0, mosaic_virus=0, septoria=0, spider_mites=0, yellow_leaf_curl_virus=0):                                          
     try:                                                                                              
         # Optional: Get Pi CPU temperature                                                            
         cpu_temp = None
@@ -130,10 +131,18 @@ def log_detection(image_url, total=0, ripe=0, unripe=0, diseased=0, image_key=No
             "image_url": image_url,                                                                   
             "total_count": total,                                                                     
             "ripe_count": ripe,                                                                       
-            "unripe_count": unripe,                                                                   
-            "diseased_count": diseased,                                                               
+            "unripe_count": unripe,                                                               
             "cpu_temp": cpu_temp,
-            "image_key": image_key
+            "image_key": image_key,
+            "early_blight": early_blight,
+            "healthy": healthy,
+            "late_blight": late_blight,
+            "leaf_miner": leaf_miner,
+            "leaf_mold": leaf_mold,
+            "mosaic_virus": mosaic_virus,
+            "septoria": septoria,
+            "spider_mites": spider_mites,
+            "yellow_leaf_curl_virus": yellow_leaf_curl_virus
         }                                                                                             
                                                                                                         
         # Insert row into Supabase                                                                    

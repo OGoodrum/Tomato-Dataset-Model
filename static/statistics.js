@@ -6,6 +6,18 @@ const SUPABASE_ANON_KEY = "sb_publishable_T_AjtavafPYU-ciQ4q_Lfg_t08Xv47P"; // S
 
 const  client= createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const tomatoLeafClasses = [
+    'Early Blight',
+    'Healthy',
+    'Late Blight',
+    'Leaf Miner',
+    'Leaf Mold',
+    'Mosaic Virus',
+    'Septoria',
+    'Spider Mites',
+    'Yellow Leaf Curl Virus'
+]
+
 
 async function fetchStatistics() {
 
@@ -22,7 +34,7 @@ async function fetchStatistics() {
     const totalImagesContainer = document.getElementById('totalImages');
     const detectionsCountContainer = document.getElementById('detectionsCount');
 
-    //console.log("Fetched data:", data);
+    console.log("Fetched data:", data);
 
     totalImagesContainer.innerText = data.length;
     detectionsCountContainer.innerText = data.reduce((sum, item) => sum + item.total_count, 0);
@@ -56,20 +68,37 @@ function createLineChart(data) {
         }
     });
 
-    console.log("Chart created with data:", data.filter(item => item.total_count >= 0).map(item => item.total_count));
 }
 
 function createPieChart(data) {
+    const barColors = [
+        "#b91d47",
+        "#00aba9",
+        "#2b5797",
+        "#e8c3b9",
+        "#1e7145"
+    ];
+
     const detectionClassChartCtx = new Chart("detectionClassChart", {
         type: 'pie',
         data: {
-            labels: []
+            labels: tomatoLeafClasses,
+            datasets: [{
+                backgroundColor: barColours,
+                data: data
+            }]
         },
         options: {
-            title: {
-                display: true,
-                text: "Types of Detections",
-                font :{size:16}
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: "Types of Detections",
+                    font :{size:16}
+                }
             }
         }
     });
