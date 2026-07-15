@@ -53,7 +53,8 @@ if not os.path.exists(MODEL_PATH):
     MODEL_PATH = "./CVResults/content/runs/detect/train/weights/last.pt"                                                                                                                  
                                                                                                                                             
 print(f"Loading model: {MODEL_PATH}...")                                                                                                    
-model = YOLO(MODEL_PATH)                                                                                                                    
+model = YOLO(MODEL_PATH)
+print(model.names)  # Print class names for debugging                                                                                                                 
                                                                                                                                             
 # Initialize webcam                                                                                                                         
 cap = cv2.VideoCapture(0)                                                                                                                   
@@ -147,9 +148,7 @@ def generate_frames():
     print("[DEBUG] Started generate_frames generator...")                                                                                   
     if not cap.isOpened():                                                                                                                  
         print("[DEBUG] Error: Camera is not open!")                                                                                         
-        return
-
-    print(model.names)  # Print class names for debugging                                                                                                                     
+        return                                                                                                                     
                                                                                                                                             
     while True:                                                                                                                             
         success, frame = cap.read()                                                                                                         
