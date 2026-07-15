@@ -5,12 +5,23 @@ const SUPABASE_URL = "https://vpofkrbxyaxvzryhmdte.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_T_AjtavafPYU-ciQ4q_Lfg_t08Xv47P"; // Safe for browser
 
 const  client= createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const detectionChartCtx = new Chart("detectionChart", {
+    type: 'line',
+    data: {
+        labels: [], // X-axis labels (e.g., timestamps)
+        datasets: [{
+            backgroundColor: '#ff5722',
+            label: 'Detections Over Time',
+            data: data.
+    },
+    options: {}
+});
 
 async function fetchStatistics() {
 
-        const { data, error } = await client
+    const { data, error } = await client
         .from('tomato_detections')
-        .select('total_count', { count: 'exact' });
+        .select('*');
 
     if (error) {
         console.error("Error fetching detection count:", error);
