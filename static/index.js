@@ -1,6 +1,6 @@
 const cameraList = document.querySelector('.cameraList');
 
-let cameraFeeds = ["https://drums-radiation-promotion-mai.trycloudflare.com/video_feed"];
+let cameraFeeds = ["/video_feed"];
 
 function updateCameraFeeds() {
     let newInnerHTML = '';

@@ -113,7 +113,7 @@ def background_db_logger():
             public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev/device_{DEVICE_ID}/{timestamp}_snapshot.jpg"                         
                                                                                                         
             # 5. Insert to Supabase DB                                                                
-            log_detection(image_url=public_image_url, total=total, image_key=f"device_{DEVICE_ID}/{timestamp}_snapshot.jpg")
+            log_detection(image_url=public_image_url, total=total, image_key=f"device_{DEVICE_ID}/{timestamp}_snapshot.jpg", early_blight=classes.count(0), healthy=classes.count(1), late_blight=classes.count(2), leaf_miner=classes.count(3), leaf_mold=classes.count(4), mosaic_virus=classes.count(5), septoria=classes.count(6), spider_mites=classes.count(7), yellow_leaf_curl_virus=classes.count(8))
 
 def log_detection(image_url, total=0, ripe=0, unripe=0, image_key=None, early_blight=0, healthy=0, late_blight=0, leaf_miner=0, leaf_mold=0, mosaic_virus=0, septoria=0, spider_mites=0, yellow_leaf_curl_virus=0):                                          
     try:                                                                                              
@@ -147,7 +147,7 @@ def log_detection(image_url, total=0, ripe=0, unripe=0, image_key=None, early_bl
                                                                                                         
         # Insert row into Supabase                                                                    
         response = supabase.table("tomato_detections").insert(data).execute()                         
-        print(f"[DB] Logged detection to Supabase: {total} tomatoes found.")                          
+        print(f"[DB] Logged detection to Supabase: {total} tomatoe leaves found.")                          
         return response.data                                                                          
     except Exception as e:                                                                            
         print(f"[DB] Error logging to Supabase: {e}")                                                 
