@@ -198,10 +198,10 @@ def historical_images():
     """Historical images page."""                                                                                                        
     return render_template('historical_images.html')
 
-@app.route('/live_videos.html')                                                                                                                    
+@app.route('/notifications.html')                                                                                                                    
 def live_videos():                                                                                                                    
-    """Live videos page."""                                                                                                        
-    return render_template('live_videos.html')
+    """Notifications page."""                                                                                                        
+    return render_template('notifications.html')
 
 @app.route('/statistics.html')                                                                                                                    
 def statistics():                                                                                                                    

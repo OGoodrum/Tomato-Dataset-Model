@@ -19,8 +19,10 @@ function updateImageArea() {
             const formattedTime = new Date(item.created_at).toLocaleString();
             newInnerHTML += `
             <li class="image-container">
-                <img src="${item.image_url}" width="640" height="480" />
-                <div class="timestamp">${formattedTime}</div>
+                <a href="${item.image_url}" target="_blank">
+                    <img src="${item.image_url}" width="640" height="480" />
+                    <div class="timestamp">${formattedTime}</div>
+                </a>
             </li>
             `;
         }
