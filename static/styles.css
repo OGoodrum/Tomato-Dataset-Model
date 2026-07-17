@@ -12,6 +12,8 @@ h1 {
     font-family: "JetBrains Mono", monospace;
 }
 
+
+
 .navBar{
     padding-left: 0px;
     list-style: none;
@@ -72,7 +74,7 @@ img {
     height: auto;
 }
 
-.stats-container, .notification-container{
+.stats-container {
     margin: 20px auto;
     padding: 20px;
     border: 3px solid #ff5722;
@@ -82,6 +84,7 @@ img {
     align-items: center;
     justify-content: center;
 }
+
 
 .tomato-statistics {
     display: flex;
@@ -94,4 +97,75 @@ img {
 
 .tomato-statistics p {
     margin: 0;
+}
+
+.notification-container {
+    padding: 20px;
+    border: 3px solid #ff5722;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 800px;
+    margin: 15px auto;
+}
+
+.notification-text {
+    flex: 1;
+    min-width: 0;
+    padding-right: 15px;
+}
+
+.notification-image {
+    flex-shrink: 0;
+}
+
+.notification-image img {
+    border-radius: 6px;
+    max-height: 80px;
+    max-width: 120px;
+    border: 2px solid #ff5722;
+    display: block;
+    object-fit: cover;
+}
+
+.notification-text h3 {
+    margin: 0 0 5px 0;
+    color: #ff5722;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+}
+
+.notification-time {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.notification-status {
+    margin: 0 0 5px 0;
+    font-size: 15px;
+}
+
+.notification-status .anomaly {
+    color: #ff5722;
+    font-weight: bold;
+}
+
+.notification-status .healthy {
+    color: #4bc0c0;
+}
+
+.notification-status .empty {
+    opacity: 0.6;
+}
+
+.notification-total-count {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
 }

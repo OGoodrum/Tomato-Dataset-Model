@@ -41,25 +41,25 @@ function updateNotifications() {
         
         let statusHtml = '';
         if (anomalies.length > 0) {
-            statusHtml = `<span style="color: #ff5722; font-weight: bold;">Anomalies: ${anomalies.join(', ')}</span>`;
+            statusHtml = `<span class="anamoly">Anomalies: ${anomalies.join(', ')}</span>`;
         } else if (notification.healthy > 0) {
-            statusHtml = `<span style="color: #4bc0c0;">All Clear (Healthy Leaves: ${notification.healthy})</span>`;
+            statusHtml = `<span class="healthy">All Clear (Healthy Leaves: ${notification.healthy})</span>`;
         } else {
-            statusHtml = `<span style="opacity: 0.6;">No tomato leaves detected</span>`;
+            statusHtml = `<span class="empty">No tomato leaves detected</span>`;
         }
 
         newInnerHTML += `
-        <li class="notification-container" style="text-align: left; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; max-width: 800px; margin: 15px auto;">
-            <div style="flex: 1; min-width: 0; padding-right: 15px;">
-                <h3 style="margin: 0 0 5px 0; color: #ff5722; font-family: 'JetBrains Mono', monospace; font-size: 18px;">Detection Event #${notification.id || index + 1}</h3>
-                <p style="margin: 0 0 8px 0; font-size: 13px; opacity: 0.7;">Time: ${formattedTime}</p>
-                <p style="margin: 0 0 5px 0; font-size: 15px;">${statusHtml}</p>
-                <p style="margin: 0; font-size: 14px; opacity: 0.9;">Total Count: ${notification.total_count || 0}</p>
+        <li class="notification-container">
+            <div class="notification-text">
+                <h3>Detection Event #${notification.id || index + 1}</h3>
+                <p class="notification-time">Time: ${formattedTime}</p>
+                <p class="notification-status">${statusHtml}</p>
+                <p class="notification-total-count">Total Count: ${notification.total_count || 0}</p>
             </div>
             ${notification.image_url ? `
-            <div style="flex-shrink: 0;">
+            <div class="notification-image"">
                 <a href="${notification.image_url}" target="_blank">
-                    <img src="${notification.image_url}" alt="Detection Image" style="border-radius: 6px; max-height: 80px; max-width: 120px; border: 2px solid #ff5722; display: block; object-fit: cover;" />
+                    <img src="${notification.image_url}" alt="Detection Image"/>
                 </a>
             </div>
             ` : ''}
