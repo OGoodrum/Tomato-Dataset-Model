@@ -18,6 +18,18 @@ const tomatoLeafClasses = [
     'Yellow Leaf Curl Virus'
 ]
 
+const barColours = [
+    "#b91d47", // Dark Red
+    "#00aba9", // Teal
+    "#2b5797", // Dark Blue
+    "#e8c3b9", // Light Pink/Sandy
+    "#1e7145", // Dark Green
+    "#ff9f40", // Orange
+    "#ffcd56", // Yellow
+    "#4bc0c0", // Turquoise
+    "#9966ff"  // Purple
+];
+
 
 async function fetchStatistics() {
 
@@ -41,6 +53,7 @@ async function fetchStatistics() {
 
     createLineChart(data);
     createPieChart(data);
+    createBarChart(data);
 
 }
 
@@ -73,17 +86,7 @@ function createLineChart(data) {
 }
 
 function createPieChart(data) {
-    const barColours = [
-        "#b91d47", // Dark Red
-        "#00aba9", // Teal
-        "#2b5797", // Dark Blue
-        "#e8c3b9", // Light Pink/Sandy
-        "#1e7145", // Dark Green
-        "#ff9f40", // Orange
-        "#ffcd56", // Yellow
-        "#4bc0c0", // Turquoise
-        "#9966ff"  // Purple
-    ];
+
 
     const detectionClassChartCtx = new Chart("detectionClassChart", {
         type: 'pie',
@@ -116,6 +119,27 @@ function createPieChart(data) {
     });
 
     console.log(`[Chart] Created pie chart for detection classes: ${tomatoLeafClasses.map((cls, index) => `${cls}: ${data.reduce((sum, item) => sum + (item[cls.toLowerCase().replace(/ /g, '_')] || 0), 0)}`).join(', ')}`);
+}
+
+function createBarChart(data){
+    const detectionClassBarChartCtx = new Chart("barChart", {
+        type: 'bar',
+        data: {
+            labels: tomatoLeafClasses,
+            datasets: [{
+                backgroundColor: barColours,
+                data: tomatoLeafClasses.map((cls, index) => data.reduce((sum, item) => sum + (item[cls.toLowerCase().replace(/ /g, '_')] || 0), 0))
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    })
 }
 
 // Call the function on page load
