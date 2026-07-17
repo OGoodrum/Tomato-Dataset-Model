@@ -85,6 +85,11 @@ img {
     justify-content: center;
 }
 
+.stats-container canvas {
+    width: 100%;
+    max-width: 700px;
+}
+
 
 .tomato-statistics {
     display: flex;

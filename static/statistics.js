@@ -99,12 +99,17 @@ function createPieChart(data) {
             plugins: {
                 legend: {
                     display: true,
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        color: 'white',
+                        font: {size:14}
+                    }
                 },
                 title: {
                     display: true,
                     text: "Types of Detections",
-                    font :{size:16}
+                    font: {size:18},
+                    color: "white"
                 }
             }
         }
