@@ -58,13 +58,56 @@ async function fetchStatistics() {
 }
 
 function createLineChart(data) {
+    // Filter and normalize dates to local midnight to avoid time-of-day offsets
+    const parsedItems = data
+        .filter(item => item.total_count >= 0 && item.created_at)
+        .map(item => {
+            const d = new Date(item.created_at);
+            return {
+                date: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
+                count: item.total_count
+            };
+        });
+
+    if (parsedItems.length === 0) {
+        return;
+    }
+
+    // Sum counts by local date string
+    const grouped = {};
+    parsedItems.forEach(item => {
+        const key = item.date.toLocaleDateString();
+        grouped[key] = (grouped[key] || 0) + item.count;
+    });
+
+    // Find min date in milliseconds and use now as the max date
+    const timeValues = parsedItems.map(item => item.date.getTime());
+    const minTime = Math.min(...timeValues);
+    const maxTime = Date.now();
+
+    const labels = [];
+    const chartData = [];
+
+    // Fill in every day sequentially from min to max date
+    let current = new Date(minTime);
+    const end = new Date(maxTime);
+
+    while (current <= end) {
+        const key = current.toLocaleDateString();
+        labels.push(key);
+        chartData.push(grouped[key] || 0);
+
+        // Advance by 1 day
+        current.setDate(current.getDate() + 1);
+    }
+
     const detectionChartCtx = new Chart("detectionChart", {
         type: 'line',
         data: {
-            labels: data.map(item => new Date(item.created_at).toLocaleDateString()), // X-axis labels formatted (date only)
+            labels: labels,
             datasets: [{
                 label: 'Total Detections Over Time',
-                data: data.filter(item => item.total_count >= 0).map(item => item.total_count), // Y-axis data is total_count
+                data: chartData,
                 borderColor: '#ff5722',
                 backgroundColor: 'rgba(255, 87, 34, 0.1)',
                 borderWidth: 2,
@@ -77,7 +120,10 @@ function createLineChart(data) {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
                 }
             }
         }
