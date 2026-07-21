@@ -10,7 +10,8 @@ def mock_dependencies():
     """Mock heavy external dependencies before importing the Flask app."""
     # Setup and start patchers
     mock_cv2 = patch("cv2.VideoCapture").start()
-    mock_yolo = patch("ultralytics.YOLO").start()
+    mock_imencode = patch("cv2.imencode").start()
+    
     mock_supabase = patch("supabase.create_client").start()
     mock_boto3 = patch("boto3.client").start()
     mock_sentry = patch("sentry_sdk.init").start()
@@ -21,7 +22,13 @@ def mock_dependencies():
     mock_cap.read.return_value = (True, MagicMock())
     mock_cv2.return_value = mock_cap
 
+    # Configure cv2.imencode mock to return success and a mock buffer
+    mock_buffer = MagicMock()
+    mock_buffer.tobytes.return_value = b"mock_frame_bytes"
+    mock_imencode.return_value = (True, mock_buffer)
+
     # Configure YOLO mock
+    mock_yolo = patch("ultralytics.YOLO").start()
     mock_yolo.return_value.names = {
         0: "early_blight", 1: "healthy", 2: "late_blight", 3: "leaf_miner",
         4: "leaf_mold", 5: "mosaic_virus", 6: "septoria", 7: "spider_mites",
@@ -34,11 +41,20 @@ def mock_dependencies():
     patch.stopall()
 
 @pytest.fixture
-def client():
-    """Create a Flask test client."""
-    # We import app here so that the patches in mock_dependencies are active
-    from app import app
-    app.config["TESTING"] = True
+def app():
+    """Create a new Flask app instance with test config."""
+    from src import create_app
+    from src.config import Config
+
+    class TestingConfig(Config):
+        TESTING = True
+        LOG_DATABASE = False
+
+    return create_app(TestingConfig)
+
+@pytest.fixture
+def client(app):
+    """Create a Flask test client"""
     with app.test_client() as client:
         yield client
 
