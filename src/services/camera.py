@@ -94,21 +94,26 @@ def background_db_logger():
                 print(f"[DB Logger] Detected {total} objects: {classes}")                       
 
                 # 3. Save the annotated frame locally                                                     
-                annotated_frame = r.plot()                                                                
-                cv2.imwrite("temp_snapshot.jpg", annotated_frame)                                         
+                annotated_frame = r.plot()
+                temp_filename = "temp_snapshot.jpg"                                                               
+                cv2.imwrite(temp_filename, annotated_frame)                                         
                                                                                                             
                 # 4. Upload snapshot to storage bucket and get public URL                                 
                 # (See previous steps for Cloudflare R2 / Supabase Storage upload)
                 
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                image_key = f"device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg"
+
+                upload_file(temp_filename, image_key)
 
                 print("[DB Logger] Upload successful!")
                         
-                public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev/device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg"                         
+                public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev/{image_key}"                         
                                                                                                             
                 # 5. Insert to Supabase DB                                                                
                 log_detection(image_url=public_image_url,
-                            total=total, image_key=f"device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg",
+                            total=total,
+                            image_key=f"device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg",
                             early_blight=classes.count(0),
                             healthy=classes.count(1),
                             late_blight=classes.count(2),
