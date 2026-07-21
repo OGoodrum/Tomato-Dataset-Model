@@ -43,8 +43,9 @@ def log_detection(image_url, total=0, ripe=0, unripe=0, image_key=None, early_bl
             "yellow_leaf_curl_virus": yellow_leaf_curl_virus
         }                                                                                             
                                                                                                         
-        # Insert row into Supabase                                                                    
-        response = _supabase_client.table("tomato_detections").insert(data).execute()                         
+        # Insert row into Supabase
+        client = get_supabase_client()                                                                   
+        response = client.table("tomato_detections").insert(data).execute()                         
         print(f"[DB] Logged detection to Supabase: {total} tomatoe leaves found.")                          
         return response.data                                                                          
     except Exception as e:                                                                            
