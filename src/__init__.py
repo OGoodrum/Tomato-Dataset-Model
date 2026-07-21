@@ -4,6 +4,7 @@ from flask_cors import CORS
 import sentry_sdk
 from src.config import Config
 
+
 def create_app(config_class=Config):
     src_dir = os.path.abspath(os.path.dirname(__file__))
     template_dir = os.path.join(src_dir, 'templates')
