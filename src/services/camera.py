@@ -1,7 +1,7 @@
 import os
+import threading
 import time
 from datetime import datetime
-import threading
 
 import cv2
 from ultralytics import YOLO
@@ -14,6 +14,7 @@ _model = None
 _camera = None
 _camera_lock = threading.Lock()
 
+
 def get_yolo_model() -> YOLO:
     global _model
     if _model is None:
@@ -21,6 +22,7 @@ def get_yolo_model() -> YOLO:
         print(f"[Model] Loading model: {path}...")
         _model = YOLO(path)
     return _model
+
 
 def get_camera() -> cv2.VideoCapture:
     global _camera
@@ -32,44 +34,46 @@ def get_camera() -> cv2.VideoCapture:
         _camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     return _camera
 
+
 def generate_frames():
     cap = get_camera()
     model = get_yolo_model()
 
-    print("[DEBUG] Started generate_frames generator...")                                                                                   
-    if not cap.isOpened():                                                                                                                  
-        print("[DEBUG] Error: Camera is not open!")                                                                                         
-        return                                                                                                                     
-                                                                                                                                            
+    print("[DEBUG] Started generate_frames generator...")
+    if not cap.isOpened():
+        print("[DEBUG] Error: Camera is not open!")
+        return
+
     while True:
-        with _camera_lock:                                                                                                                            
-            success, frame = cap.read()                                                                                                         
-        if not success:                                                                                                                     
-            print("[DEBUG] Error: Failed to read frame from camera.")                                                                       
-            break                                                                                                                           
-                                                                                                                                            
-        # Run inference (stream=True optimizes memory; conf=0.5 filters early)                                                              
-        try:                                                                                                                                
-            results = model.predict(frame, conf=0.5, verbose=False, stream=True)                                                            
-            for r in results:                                                                                                               
-                # Render bounding boxes and labels directly onto the frame                                                                  
-                frame = r.plot()                                                                                                            
-        except Exception as e:                                                                                                              
-            print(f"[DEBUG] Model inference failed: {e}")                                                                                   
-            break                                                                                                                           
-                                                                                                                                            
-        # Encode the frame in JPEG format                                                                                                   
-        ret, buffer = cv2.imencode('.jpg', frame)                                                                                           
-        if not ret:                                                                                                                         
-            print("[DEBUG] Error: Failed to encode frame to JPEG.")                                                                         
-            continue                                                                                                                        
-                                                                                                                                            
-        frame_bytes = buffer.tobytes()                                                                                                      
-                                                                                                                                            
-        # Yield the image block using multipart/x-mixed-replace mimetype                                                                    
-        yield (b'--frame\r\n'                                                                                                               
+        with _camera_lock:
+            success, frame = cap.read()
+        if not success:
+            print("[DEBUG] Error: Failed to read frame from camera.")
+            break
+
+        # Run inference (stream=True optimizes memory; conf=0.5 filters early)
+        try:
+            results = model.predict(frame, conf=0.5, verbose=False, stream=True)
+            for r in results:
+                # Render bounding boxes and labels directly onto the frame
+                frame = r.plot()
+        except Exception as e:
+            print(f"[DEBUG] Model inference failed: {e}")
+            break
+
+        # Encode the frame in JPEG format
+        ret, buffer = cv2.imencode('.jpg', frame)
+        if not ret:
+            print("[DEBUG] Error: Failed to encode frame to JPEG.")
+            continue
+
+        frame_bytes = buffer.tobytes()
+
+        # Yield the image block using multipart/x-mixed-replace mimetype
+        yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
-        
+
+
 def background_db_logger():
     print("[DB Logger] Started background logger thread")
     cap = get_camera()
@@ -77,7 +81,7 @@ def background_db_logger():
 
     while True:
         time.sleep(Config.LOG_INTERVAL)
-        
+
         with _camera_lock:
             success, frame = cap.read()
         if not success or frame is None:
@@ -86,30 +90,30 @@ def background_db_logger():
         try:
             results = model.predict(frame, conf=0.5, verbose=False)
 
-            for r in results:                                                                             
-                # Get counts                                                                              
-                total = len(r.boxes)                                                                      
-                # Assuming class 0 = ripe, 1 = unripe, 2 = diseased (change based on your model.names)    
+            for r in results:
+                # Get counts
+                total = len(r.boxes)
+                # Assuming class 0 = ripe, 1 = unripe, 2 = diseased (change based on your model.names)
                 classes = r.boxes.cls.tolist()
-                print(f"[DB Logger] Detected {total} objects: {classes}")                       
+                print(f"[DB Logger] Detected {total} objects: {classes}")
 
-                # 3. Save the annotated frame locally                                                     
+                # 3. Save the annotated frame locally
                 annotated_frame = r.plot()
-                temp_filename = "temp_snapshot.jpg"                                                               
-                cv2.imwrite(temp_filename, annotated_frame)                                         
-                                                                                                            
-                # 4. Upload snapshot to storage bucket and get public URL                                 
+                temp_filename = "temp_snapshot.jpg"
+                cv2.imwrite(temp_filename, annotated_frame)
+
+                # 4. Upload snapshot to storage bucket and get public URL
                 # (See previous steps for Cloudflare R2 / Supabase Storage upload)
-                
+
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                 image_key = f"device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg"
 
                 upload_file(temp_filename, image_key)
 
                 print("[DB Logger] Upload successful!")
-                        
-                public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev/{image_key}"                         
-                                                                                                            
+
+                public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev/{image_key}"
+
                 # 5. Insert to Supabase DB                                                                
                 log_detection(image_url=public_image_url,
                             total=total,
@@ -135,6 +139,3 @@ def start_background_logger():
         thread.start()
         _logger_started = True
         print("[DB Logger] Spawned background thread.")
-
-
-

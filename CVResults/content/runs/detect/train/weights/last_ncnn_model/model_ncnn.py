@@ -1,6 +1,7 @@
-import numpy as np
 import ncnn
+import numpy as np
 import torch
+
 
 def test_inference():
     torch.manual_seed(0)

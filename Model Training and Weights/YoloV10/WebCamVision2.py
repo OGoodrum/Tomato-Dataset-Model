@@ -1,9 +1,11 @@
-import os                                                                                                               
-import time                                                                                                             
-import argparse                                                                                                         
-import cv2                                                                                                              
-import torch                                                                                                            
+import argparse
+import os
+import time
+
+import cv2
+import torch
 from ultralytics import YOLO
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="YOLO Webcam Inference")
@@ -26,6 +28,7 @@ def parse_args():
         help="Confidence threshold (default: 0.5)"
     )
     return parser.parse_args()
+
 
 def main():
     args = parse_args()
@@ -118,5 +121,6 @@ def main():
     cv2.destroyAllWindows()
     print("Resources released. WebCamVision session closed.")
 
+
 if __name__ == "__main__":
-        main()
+    main()

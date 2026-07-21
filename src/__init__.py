@@ -1,7 +1,9 @@
 import os
+
+import sentry_sdk
 from flask import Flask
 from flask_cors import CORS
-import sentry_sdk
+
 from src.config import Config
 
 

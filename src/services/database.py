@@ -1,4 +1,5 @@
-from supabase import create_client, Client
+from supabase import Client, create_client
+
 from src.config import Config
 
 _supabase_client = None

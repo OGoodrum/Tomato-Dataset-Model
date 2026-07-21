@@ -1,4 +1,5 @@
 import boto3
+
 from src.config import Config
 
 _s3_client = None
