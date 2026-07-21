@@ -5,9 +5,9 @@ import sentry_sdk
 from src.config import Config
 
 def create_app(config_class=Config):
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    template_dir = os.path.join(root_dir, 'templates')
-    static_dir = os.path.join(root_dir, 'static')
+    src_dir = os.path.abspath(os.path.dirname(__file__))
+    template_dir = os.path.join(src_dir, 'templates')
+    static_dir = os.path.join(src_dir, 'static')
 
     app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
     app.config.from_object(config_class)
