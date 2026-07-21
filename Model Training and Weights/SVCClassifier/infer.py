@@ -1,5 +1,4 @@
 import pickle
-import os
 import tracemalloc
 
 from skimage.io import imread
