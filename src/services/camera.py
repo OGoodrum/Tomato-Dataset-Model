@@ -69,4 +69,67 @@ def generate_frames():
         # Yield the image block using multipart/x-mixed-replace mimetype                                                                    
         yield (b'--frame\r\n'                                                                                                               
                 b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+        
+def background_db_logger():
+    print("[DB Logger] Started background logger thread")
+    cap = get_camera()
+    model = get_yolo_model()
+
+    while True:
+        time.sleep(Config.LOG_INTERVAL)
+        
+        with _camera_lock:
+            success, frame = cap.read()
+        if not success or frame is None:
+            continue
+
+        try:
+            results = model.predict(frame, conf=0.5, verbose=False)
+
+            for r in results:                                                                             
+                # Get counts                                                                              
+                total = len(r.boxes)                                                                      
+                # Assuming class 0 = ripe, 1 = unripe, 2 = diseased (change based on your model.names)    
+                classes = r.boxes.cls.tolist()
+                print(f"[DB Logger] Detected {total} objects: {classes}")                       
+
+                # 3. Save the annotated frame locally                                                     
+                annotated_frame = r.plot()                                                                
+                cv2.imwrite("temp_snapshot.jpg", annotated_frame)                                         
+                                                                                                            
+                # 4. Upload snapshot to storage bucket and get public URL                                 
+                # (See previous steps for Cloudflare R2 / Supabase Storage upload)
+                
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+                print("[DB Logger] Upload successful!")
+                        
+                public_image_url = f"https://pub-61e76408148846dfb873bd72b8b24454.r2.dev/device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg"                         
+                                                                                                            
+                # 5. Insert to Supabase DB                                                                
+                log_detection(image_url=public_image_url,
+                            total=total, image_key=f"device_{Config.DEVICE_ID}/{timestamp}_snapshot.jpg",
+                            early_blight=classes.count(0),
+                            healthy=classes.count(1),
+                            late_blight=classes.count(2),
+                            leaf_miner=classes.count(3),
+                            leaf_mold=classes.count(4),
+                            mosaic_virus=classes.count(5),
+                            septoria=classes.count(6),
+                            spider_mites=classes.count(7),
+                            yellow_leaf_curl_virus=classes.count(8))
+        except Exception as e:
+            print(f"[DB Logger] Error running inference/upload: {e}")
+
+
+_logger_started = False
+def start_background_logger():
+    global _logger_started
+    if not _logger_started:
+        thread = threading.Thread(target=background_db_logger, daemon=True)
+        thread.start()
+        _logger_started = True
+        print("[DB Logger] Spawned background thread.")
+
+
 
