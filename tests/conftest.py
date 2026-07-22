@@ -14,6 +14,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+@pytest.fixture(autouse=True)
+def reset_supabase_globals():
+    """Reset the global client in database.py between tests for isolation."""
+    import src.services.database
+    src.services.database._supabase_client = None
+    yield
+    src.services.database._supabase_client = None
 
 @pytest.fixture(scope="session", autouse=True)
 def mock_dependencies():
@@ -65,7 +72,7 @@ def mock_database():
     mock_execute.data = [{"id": 1, "total_count": 5}]
 
     # Patch the get_supabase_client function in the database service
-    with patch("src.services.database.get_supabase_client", return_value=mock_client):
+    with patch("src.services.database.create_client", return_value=mock_client):
         yield mock_client
 
 @pytest.fixture
