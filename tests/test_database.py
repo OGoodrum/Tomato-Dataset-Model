@@ -1,5 +1,26 @@
 import pytest
 from src.services.database import log_detection, get_supabase_client
+from unittest.mock import MagicMock, patch
+
+@pytest.fixture
+def mock_database():
+    """Mock the Supabase client and query builder chain."""
+    mock_client = MagicMock()
+    mock_table = MagicMock()
+    mock_insert = MagicMock()
+    mock_execute = MagicMock()
+
+    # Chain mock methods: client.table().insert().execute()
+    mock_client.table.return_value = mock_table
+    mock_table.insert.return_value = mock_insert
+    mock_insert.execute.return_value = mock_execute
+
+    # Set mock payload returned by execute()
+    mock_execute.data = [{"id": 1, "total_count": 5}]
+
+    # Patch the get_supabase_client function in the database service
+    with patch("src.services.database.create_client", return_value=mock_client):
+        yield mock_client
 
 def test_log_detection_inserts_to_supabase(mock_database):
     # Act: call log_detection

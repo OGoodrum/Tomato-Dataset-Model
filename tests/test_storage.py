@@ -1,5 +1,16 @@
+import pytest
+from unittest.mock import MagicMock, patch
 from src.services.storage import upload_file
 
+
+@pytest.fixture
+def mock_s3_client():
+    """Mock the boto3 S3/R2 client."""
+    mock_client = MagicMock()
+
+    # Patch the get_s3_client function in the storage service
+    with patch("src.services.storage.get_s3_client", return_value=mock_client):
+        yield mock_client
 
 def test_upload_file_uploads_to_r2(mock_s3_client):
     # Act: call upload_file

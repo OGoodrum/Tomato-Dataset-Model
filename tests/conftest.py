@@ -75,35 +75,3 @@ def mock_dependencies():
 
     # Clean up patchers
     patch.stopall()
-
-
-@pytest.fixture
-def mock_database():
-    """Mock the Supabase client and query builder chain."""
-    mock_client = MagicMock()
-    mock_table = MagicMock()
-    mock_insert = MagicMock()
-    mock_execute = MagicMock()
-
-    # Chain mock methods: client.table().insert().execute()
-    mock_client.table.return_value = mock_table
-    mock_table.insert.return_value = mock_insert
-    mock_insert.execute.return_value = mock_execute
-
-    # Set mock payload returned by execute()
-    mock_execute.data = [{"id": 1, "total_count": 5}]
-
-    # Patch the get_supabase_client function in the database service
-    with patch("src.services.database.create_client", return_value=mock_client):
-        yield mock_client
-
-
-@pytest.fixture
-def mock_s3_client():
-    """Mock the boto3 S3/R2 client."""
-    mock_client = MagicMock()
-
-    # Patch the get_s3_client function in the storage service
-    with patch("src.services.storage.get_s3_client", return_value=mock_client):
-        yield mock_client
-
