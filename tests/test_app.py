@@ -28,8 +28,20 @@ def client(app):
     ("/statistics.html", 200),
     ("/fake_route.html", 404),
 ])
-
-def test_video_feed_route(client, route, status_code):
+def test_route_get(client, route, status_code):
     """Test that the routes respond with the correct status code."""
     response = client.get(route)
     assert response.status_code == status_code
+
+@pytest.mark.parametrize("route", [
+    ("/video_feed"),
+    ("/index.html"),
+    ("/"),
+    ("/historical_images.html"),
+    ("/notifications.html"),
+    ("/statistics.html"),
+])
+def test_route_post(client, route):
+    """Test that I can only get from endpoints"""
+    response = client.post(route)
+    assert response.status_code == 405
