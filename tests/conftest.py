@@ -20,14 +20,17 @@ def reset_globals():
     """Reset global singletons in database.py and camera.py between tests for isolation."""
     import src.services.database
     import src.services.camera
+    import src.services.storage
 
     src.services.database._supabase_client = None
     src.services.camera._model = None
     src.services.camera._camera = None
+    src.services.storage._s3_client = None
     yield
     src.services.database._supabase_client = None
     src.services.camera._model = None
     src.services.camera._camera = None
+    src.services.storage._s3_client = None
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -104,22 +107,3 @@ def mock_s3_client():
     with patch("src.services.storage.get_s3_client", return_value=mock_client):
         yield mock_client
 
-
-@pytest.fixture
-def app():
-    """Create a new Flask app instance with test config."""
-    from src import create_app
-    from src.config import Config
-
-    class TestingConfig(Config):
-        TESTING = True
-        LOG_DATABASE = True
-
-    return create_app(TestingConfig)
-
-
-@pytest.fixture
-def client(app):
-    """Create a Flask test client"""
-    with app.test_client() as client:
-        yield client

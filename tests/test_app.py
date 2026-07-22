@@ -1,3 +1,24 @@
+import pytest
+
+@pytest.fixture
+def app():
+    """Create a new Flask app instance with test config."""
+    from src import create_app
+    from src.config import Config
+
+    class TestingConfig(Config):
+        TESTING = True
+        LOG_DATABASE = True
+
+    return create_app(TestingConfig)
+
+
+@pytest.fixture
+def client(app):
+    """Create a Flask test client"""
+    with app.test_client() as client:
+        yield client
+
 def test_video_feed_route(client):
     """Test that the video feed route responds with success."""
     response = client.get("/video_feed")
