@@ -16,13 +16,18 @@ import pytest
 
 
 @pytest.fixture(autouse=True)
-def reset_supabase_globals():
-    """Reset the global client in database.py between tests for isolation."""
+def reset_globals():
+    """Reset global singletons in database.py and camera.py between tests for isolation."""
     import src.services.database
+    import src.services.camera
 
     src.services.database._supabase_client = None
+    src.services.camera._model = None
+    src.services.camera._camera = None
     yield
     src.services.database._supabase_client = None
+    src.services.camera._model = None
+    src.services.camera._camera = None
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -46,18 +51,22 @@ def mock_dependencies():
     mock_imencode.return_value = (True, mock_buffer)
 
     # Configure YOLO mock
-    mock_yolo = patch("ultralytics.YOLO").start()
-    mock_yolo.return_value.names = {
-        0: "early_blight",
-        1: "healthy",
-        2: "late_blight",
-        3: "leaf_miner",
-        4: "leaf_mold",
-        5: "mosaic_virus",
-        6: "septoria",
-        7: "spider_mites",
-        8: "yellow_leaf_curl_virus",
-    }
+    mock_yolo_class = patch("ultralytics.YOLO").start()
+    mock_yolo_cam_class = patch("src.services.camera.YOLO").start()
+
+    for mock_cls in (mock_yolo_class, mock_yolo_cam_class):
+        mock_cls.return_value.names = {
+            0: "early_blight",
+            1: "healthy",
+            2: "late_blight",
+            3: "leaf_miner",
+            4: "leaf_mold",
+            5: "mosaic_virus",
+            6: "septoria",
+            7: "spider_mites",
+            8: "yellow_leaf_curl_virus",
+        }
+        mock_cls.return_value.predict.return_value = []
 
     yield
 
