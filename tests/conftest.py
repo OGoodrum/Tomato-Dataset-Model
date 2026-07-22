@@ -54,22 +54,22 @@ def mock_dependencies():
     mock_imencode.return_value = (True, mock_buffer)
 
     # Configure YOLO mock
-    mock_yolo_class = patch("ultralytics.YOLO").start()
+    
     mock_yolo_cam_class = patch("src.services.camera.YOLO").start()
 
-    for mock_cls in (mock_yolo_class, mock_yolo_cam_class):
-        mock_cls.return_value.names = {
-            0: "early_blight",
-            1: "healthy",
-            2: "late_blight",
-            3: "leaf_miner",
-            4: "leaf_mold",
-            5: "mosaic_virus",
-            6: "septoria",
-            7: "spider_mites",
-            8: "yellow_leaf_curl_virus",
-        }
-        mock_cls.return_value.predict.return_value = []
+    
+    mock_yolo_cam_class.return_value.names = {
+        0: "early_blight",
+        1: "healthy",
+        2: "late_blight",
+        3: "leaf_miner",
+        4: "leaf_mold",
+        5: "mosaic_virus",
+        6: "septoria",
+        7: "spider_mites",
+        8: "yellow_leaf_curl_virus",
+    }
+    mock_yolo_cam_class.return_value.predict.return_value = []
 
     yield
 
