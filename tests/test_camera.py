@@ -1,6 +1,7 @@
 import pytest
 from src.services.camera import generate_frames
 
+
 def test_generate_frames():
     """Test that generate_frames yields formatted MJPEG frame bytes."""
     gen = generate_frames()
