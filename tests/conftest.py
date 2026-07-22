@@ -14,21 +14,24 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+
 @pytest.fixture(autouse=True)
 def reset_supabase_globals():
     """Reset the global client in database.py between tests for isolation."""
     import src.services.database
+
     src.services.database._supabase_client = None
     yield
     src.services.database._supabase_client = None
+
 
 @pytest.fixture(scope="session", autouse=True)
 def mock_dependencies():
     """Mock heavy external dependencies before importing the Flask app."""
     # Setup and start patchers
-    
+
     mock_sentry = patch("sentry_sdk.init").start()
-    
+
     # Configure OpenCV mock
     mock_cv2 = patch("cv2.VideoCapture").start()
     mock_cap = MagicMock()
@@ -45,15 +48,22 @@ def mock_dependencies():
     # Configure YOLO mock
     mock_yolo = patch("ultralytics.YOLO").start()
     mock_yolo.return_value.names = {
-        0: "early_blight", 1: "healthy", 2: "late_blight", 3: "leaf_miner",
-        4: "leaf_mold", 5: "mosaic_virus", 6: "septoria", 7: "spider_mites",
-        8: "yellow_leaf_curl_virus"
+        0: "early_blight",
+        1: "healthy",
+        2: "late_blight",
+        3: "leaf_miner",
+        4: "leaf_mold",
+        5: "mosaic_virus",
+        6: "septoria",
+        7: "spider_mites",
+        8: "yellow_leaf_curl_virus",
     }
 
     yield
 
     # Clean up patchers
     patch.stopall()
+
 
 @pytest.fixture
 def mock_database():
@@ -75,6 +85,7 @@ def mock_database():
     with patch("src.services.database.create_client", return_value=mock_client):
         yield mock_client
 
+
 @pytest.fixture
 def mock_s3_client():
     """Mock the boto3 S3/R2 client."""
@@ -83,6 +94,7 @@ def mock_s3_client():
     # Patch the get_s3_client function in the storage service
     with patch("src.services.storage.get_s3_client", return_value=mock_client):
         yield mock_client
+
 
 @pytest.fixture
 def app():
@@ -96,9 +108,9 @@ def app():
 
     return create_app(TestingConfig)
 
+
 @pytest.fixture
 def client(app):
     """Create a Flask test client"""
     with app.test_client() as client:
         yield client
-

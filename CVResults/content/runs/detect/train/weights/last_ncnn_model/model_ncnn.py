@@ -23,5 +23,6 @@ def test_inference():
     else:
         return tuple(out)
 
+
 if __name__ == "__main__":
     print(test_inference())
