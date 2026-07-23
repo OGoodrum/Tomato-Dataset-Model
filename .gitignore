@@ -2,6 +2,9 @@
 PlantVillage/
 Tomato leaf diseases dataset for Object Detection/
 
+# Node Modules
+node_modules/
+
 # Image files
 *.jpg
 *.jpeg
