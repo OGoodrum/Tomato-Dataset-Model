@@ -13,6 +13,7 @@
 <body>
     <header>
         <h1>Historical Tomato Detection Images</h1>
+        <button onClick="document.getElementById('login_popup').style.display='block'" style="width:auto;">Login</button>
     </header>
 
     <nav>
@@ -25,6 +26,10 @@
     </nav>
 
     <main>
+        <div id="login_popup" class="modal">
+            <!--Login popup is inserted here-->
+        </div>
+
         <ul class="imageArea">
             <!-- Images will be dynamically inserted here -->
         </ul>
@@ -36,4 +41,5 @@
 
 </body>
 <script type="module" src="/static/historical_images.js"></script>
+<script src="/static/login.js"></script>
 </html>

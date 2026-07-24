@@ -13,6 +13,7 @@
 <body>
     <header>
         <h1>Live Tomato Detection Stream</h1>
+        <button onClick="document.getElementById('login_popup').style.display='block'" style="width:auto;">Login</button>
     </header>
 
     <nav>
@@ -25,11 +26,15 @@
     </nav>
 
     <main>
+        <div id="login_popup" class="modal">
+            <!--Login popup is inserted here-->
+        </div>
+
         <h2>Streaming from Raspberry Pi</h2>
 
         <div>
             <ul class="cameraList">
-
+                <!--List of streams are inserted here-->
             </ul>
         </div>
     </main>
@@ -40,4 +45,5 @@
 
 </body>
 <script src="/static/index.js"></script>
+<script src="/static/login.js"></script>
 </html>

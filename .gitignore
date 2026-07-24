@@ -5,6 +5,8 @@ Tomato leaf diseases dataset for Object Detection/
 # Node Modules
 node_modules/
 
+.vscode/
+
 # Image files
 *.jpg
 *.jpeg
