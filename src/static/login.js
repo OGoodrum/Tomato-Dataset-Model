@@ -1,7 +1,7 @@
 // Get the modal
 var modal = document.getElementById('login_popup');
 
-
+// Imediately load in the login page
 const load_login = () => {
     fetch(`../templates/login.html`)
     .then(res => {
@@ -14,7 +14,6 @@ const load_login = () => {
 };
 
 load_login();
-
 
 
 // When the user clicks anywhere outside of the modal, close it

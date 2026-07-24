@@ -187,7 +187,6 @@ input[type=text], input[type=password] {
 
 /* Set a style for all buttons */
 button {
-  background-color: #04AA6D;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -198,6 +197,10 @@ button {
 
 button:hover {
   opacity: 0.8;
+}
+
+.loginButton {
+    background-color: #04AA6D;
 }
 
 /* Extra styles for the cancel button */
