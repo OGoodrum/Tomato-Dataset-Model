@@ -3,7 +3,7 @@ var modal = document.getElementById('login_popup');
 
 // Imediately load in the login page
 const load_login = () => {
-    fetch(`../templates/login.html`)
+    fetch(`templates/login.html`)
     .then(res => {
         if (res.ok){
             return res.text()
@@ -21,4 +21,15 @@ window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
+}
+
+const signupClick = () => {
+    fetch(`/signup.html`)
+    .then(res => {
+        if (res.ok){
+            return res.text()
+        }
+    }).then(htmlSnippet => {
+        modal.innerHTML = htmlSnippet;
+    });
 }
