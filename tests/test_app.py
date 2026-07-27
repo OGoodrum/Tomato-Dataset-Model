@@ -30,7 +30,7 @@ def client(app):
 ])
 def test_route_get(client, route, status_code):
     """Test that the routes respond with the correct status code."""
-    response = client.get(route)
+    response = client.get(route, auth=('user', 'pass'))
     assert response.status_code == status_code
 
 @pytest.mark.parametrize("route", [
