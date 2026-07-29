@@ -63,7 +63,7 @@ def login_api():
 
     return jsonify({"success": False, "message": "Invalid username or password"}), 401
 
-@bp.route("/login", methods=["GET"])
+@bp.route("/login.html", methods=["GET"])
 def login_page():
     return render_template("login.html")
 
