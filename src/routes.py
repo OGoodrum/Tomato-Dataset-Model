@@ -66,3 +66,8 @@ def login_api():
 @bp.route("/login", methods=["GET"])
 def login_page():
     return render_template("login.html")
+
+@bp.route("/api/logout")
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('main.login_page'))
