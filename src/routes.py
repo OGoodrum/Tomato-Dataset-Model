@@ -71,3 +71,28 @@ def login_page():
 def logout():
     session.pop('user', None)
     return redirect(url_for('main.login_page'))
+
+@bp.route("/signup.html", methods=["GET"])
+def signup():
+    return render_template("signup.html")
+
+@bp.route("/api/signup", methods=["POST"])
+def signup_api():
+    """Register a new user to the database"""
+    data = request.get_json(silent=True) or request.form
+    username = data.get("uname") or data.get("username")
+    password = data.get("psw") or data.get("password")
+
+    db_client = get_supabase_client()
+
+    try:
+        response = db_client.table("users").select('username, password').eq("username", username).execute()
+        if response.data and response.data[0]["username"] == username:
+            return jsonify({"Success": False, "message": "Invalid username, someone already has this username"}), 401
+        
+        response = db_client.table("users").insert({"username": username, "password": password}).execute()
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+    session['user'] = username
+    return redirect(url_for("main.index"))
