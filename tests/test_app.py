@@ -19,6 +19,10 @@ def client(app):
     with app.test_client() as client:
         yield client
 
+@pytest.fixture
+def database_mock():
+    
+
 @pytest.mark.parametrize("route, status_code", [
     ("/video_feed", 200),
     ("/index.html", 200),
@@ -43,5 +47,18 @@ def test_route_get(client, route, status_code):
 ])
 def test_route_post(client, route):
     """Test that I can only get from endpoints"""
-    response = client.post(route)
+    response = client.post(route, auth=('user', 'pass'))
     assert response.status_code == 405
+
+@pytest.mark.parametrize("route", [
+    ("/video_feed"),
+    ("/index.html"),
+    ("/"),
+    ("/historical_images.html"),
+    ("/notifications.html"),
+    ("/statistics.html"),
+])
+def test_incorrect_login(client, route):
+    """Test that if login is incorrect then the page will not load"""
+    response = client.get(route, auth=('wrong_username', 'wrong_password'))
+    assert response.status_code == 401

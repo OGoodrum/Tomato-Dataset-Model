@@ -7,8 +7,7 @@ load_dotenv()
 class Config:
     TESTING = False
 
-    SITE_USER = os.getenv("SITE_USER")
-    SITE_PASS = os.getenv("SITE_PASS")
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
     # Sentry Configuration
     SENTRY_DSN = "https://e80b87c7a6d9121f37069f69b2f53329@o4511668378992640.ingest.us.sentry.io/4511668425785344"
