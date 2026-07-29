@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, render_template, request, session, jsonify, url_for
+from flask import Blueprint, Response, render_template, request, session, jsonify, url_for, redirect
 
 from src.services.camera import generate_frames
 from src.services.database import get_supabase_client
@@ -48,7 +48,7 @@ def video_feed():
 @bp.route("/api/login", methods=["POST"])
 def login_api():
     """Login route for logging in a user"""
-    data = request.get_json() or request.form
+    data = request.get_json(silent=True) or request.form
     username = data.get("uname") or data.get("username")
     password = data.get("psw") or data.get("password")
 
@@ -57,7 +57,7 @@ def login_api():
         response = db_client.table("users").select('username, password').eq("username", username).execute()
         if response.data and response.data[0]["password"] == password:
             session['user'] = username
-            return jsonify({"success": True, "redirect": url_for("main.index")})
+            return redirect(url_for('main.index'))
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 

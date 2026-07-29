@@ -1,21 +1,23 @@
 // Get the modal
 var modal = document.getElementById('login_popup');
 
+document.addEventListener('submit', function (e) {
+    if (e.target && e.target.classList.contains('modal-content')) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+        fetch('/api/login', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload(); // Successfully logged in
+                console.log("succes");
+            } else {
+                alert(data.message || 'Login failed');
+            }
+        });
     }
-}
-
-const signupClick = () => {
-    fetch(`/signup.html`)
-    .then(res => {
-        if (res.ok){
-            return res.text()
-        }
-    }).then(htmlSnippet => {
-        modal.innerHTML = htmlSnippet;
-    });
-}
+});
