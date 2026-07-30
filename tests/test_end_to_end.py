@@ -16,7 +16,7 @@ def test_redirect(page: Page):
     expect(page).to_have_url("http://localhost:5000/login.html")
 
 def test_user_login(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
     page = context.new_page()
     page.goto("http://localhost:5000/login.html")
