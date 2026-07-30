@@ -34,13 +34,28 @@ jobs:
         playwright install --with-deps
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Start up Server
-      run: python wsgi.py
+      id: server
+      run: |
+        python wsgi.py
+      background: true
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Wait for Server
+      run: |
+        for i in {1..10}; do
+          if curl -s http://localhost:8000/; then
+            echo "Service is up!"
+            break
+          fi
+          echo "Waiting for service to start..."
+          sleep 5
+        done
     - name: Test with pytest
       run: |
         pytest --cov .
+    - name: Stop the server
+      cancel: server
