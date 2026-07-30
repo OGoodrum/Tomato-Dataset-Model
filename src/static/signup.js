@@ -1,13 +1,15 @@
-const password = document.getElementsByName("psw");
-const confirmPassword = document.getElementsByName("psw-repeat");
+const password = document.querySelector('input[name="psw"]');
+const confirmPassword = document.querySelector('input[name="psw-repeat"]');
 
-function validatePassword(){
-    if(password.value !== confirmPassword.value){
-        confirmPassword.setCustomValidity("Password do not mathch!");
+function validatePassword() {
+    if (password.value !== confirmPassword.value) {
+        confirmPassword.setCustomValidity("Passwords do not match!");
     } else {
         confirmPassword.setCustomValidity("");
     }
 }
 
-password.addEventListener("change", validatePassword);
-confirmPassword.addEventListener("keyup", validatePassword);
+if (password && confirmPassword) {
+    password.addEventListener('input', validatePassword);
+    confirmPassword.addEventListener('input', validatePassword);
+}

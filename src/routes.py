@@ -82,6 +82,7 @@ def signup_api():
     data = request.get_json(silent=True) or request.form
     username = data.get("uname") or data.get("username")
     password = data.get("psw") or data.get("password")
+    email = data.get("email")
 
     db_client = get_supabase_client()
 
@@ -90,7 +91,7 @@ def signup_api():
         if response.data and response.data[0]["username"] == username:
             return jsonify({"Success": False, "message": "Invalid username, someone already has this username"}), 401
         
-        response = db_client.table("users").insert({"username": username, "password": password}).execute()
+        response = db_client.table("users").insert({"username": username, "password": password, "email": email}).execute()
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
