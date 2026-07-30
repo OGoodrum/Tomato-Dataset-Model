@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture
 def app():
     """Create a new Flask app instance with test config."""
@@ -20,7 +21,15 @@ def client(app):
         yield client
 
 @pytest.fixture
+def logged_in_client(client):
+    """A test client with an active authenticated user session"""
+    with client.session_transaction() as sess:
+        sess['user'] = 'test_user'
+    return client
+
+@pytest.fixture
 def database_mock():
+    pass
     
 
 @pytest.mark.parametrize("route, status_code", [
@@ -32,9 +41,9 @@ def database_mock():
     ("/statistics.html", 200),
     ("/fake_route.html", 404),
 ])
-def test_route_get(client, route, status_code):
+def test_route_get(logged_in_client, route, status_code):
     """Test that the routes respond with the correct status code."""
-    response = client.get(route, auth=('user', 'pass'))
+    response = logged_in_client.get(route)
     assert response.status_code == status_code
 
 @pytest.mark.parametrize("route", [
@@ -47,7 +56,7 @@ def test_route_get(client, route, status_code):
 ])
 def test_route_post(client, route):
     """Test that I can only get from endpoints"""
-    response = client.post(route, auth=('user', 'pass'))
+    response = client.post(route)
     assert response.status_code == 405
 
 @pytest.mark.parametrize("route", [
@@ -58,7 +67,7 @@ def test_route_post(client, route):
     ("/notifications.html"),
     ("/statistics.html"),
 ])
-def test_incorrect_login(client, route):
+def test_redirect(client, route):
     """Test that if login is incorrect then the page will not load"""
-    response = client.get(route, auth=('wrong_username', 'wrong_password'))
-    assert response.status_code == 401
+    response = client.get(route)
+    assert response.status_code == 302
