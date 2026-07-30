@@ -27,9 +27,21 @@ def logged_in_client(client):
         sess['user'] = 'test_user'
     return client
 
-@pytest.fixture
-def database_mock():
-    pass
+@pytest.mark.parametrize("route, status_code", [
+    ("/video_feed", 302),
+    ("/index.html", 302),
+    ("/", 302),
+    ("/historical_images.html", 302),
+    ("/notifications.html", 302),
+    ("/statistics.html", 302),
+    ("/login.html", 200),
+    ("/signup.html", 200),
+    ("/fake_route.html", 404),
+])
+def test_logged_out_get(client, route, status_code):
+    """Test GET method on all routes when logged out"""
+    response = client.get(route)
+    assert response.status_code == status_code
     
 
 @pytest.mark.parametrize("route, status_code", [
@@ -41,8 +53,8 @@ def database_mock():
     ("/statistics.html", 200),
     ("/fake_route.html", 404),
 ])
-def test_route_get(logged_in_client, route, status_code):
-    """Test that the routes respond with the correct status code."""
+def test_route_logged_in_get(logged_in_client, route, status_code):
+    """Test GET method on routes when logged in."""
     response = logged_in_client.get(route)
     assert response.status_code == status_code
 
@@ -53,6 +65,8 @@ def test_route_get(logged_in_client, route, status_code):
     ("/historical_images.html"),
     ("/notifications.html"),
     ("/statistics.html"),
+    ("/login.html"),
+    ("/signup.html"),
 ])
 def test_route_post(client, route):
     """Test that I can only get from endpoints"""
@@ -71,3 +85,15 @@ def test_redirect(client, route):
     """Test that if login is incorrect then the page will not load"""
     response = client.get(route)
     assert response.status_code == 302
+
+@pytest.mark.parametrize("route", [
+    ("/api/login"),
+    ("/api/signup"),
+])
+def test_get_api_routes(client, route):
+    response = client.get(route)
+    assert response.status_code == 405
+
+
+
+
