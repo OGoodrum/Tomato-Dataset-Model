@@ -93,7 +93,7 @@ def signup_api():
         if response.data and response.data[0]["username"] == username:
             return jsonify({"Success": False, "message": "Invalid username, someone already has this username"}), 401
 
-        hashed_password = bcrypt.generate_password_hash(password)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         
         response = db_client.table("users").insert({"username": username, "password": hashed_password, "email": email}).execute()
     except Exception as e:
