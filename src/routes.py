@@ -1,4 +1,5 @@
 from flask import Blueprint, Response, render_template, request, session, jsonify, url_for, redirect
+from flask_bcrypt import Bcrypt
 
 from src.services.camera import generate_frames
 from src.services.database import get_supabase_client
@@ -6,6 +7,7 @@ from src.services.database import get_supabase_client
 from .utils import auth_required
 
 bp = Blueprint("main", __name__)
+bcrypt = Bcrypt()
 
 
 @bp.route("/")
@@ -55,7 +57,7 @@ def login_api():
     db_client = get_supabase_client()
     try:
         response = db_client.table("users").select('username, password').eq("username", username).execute()
-        if response.data and response.data[0]["password"] == password:
+        if response.data and bcrypt.check_password_hash(response.data[0]["password"], password):
             session['user'] = username
             return redirect(url_for('main.index'))
     except Exception as e:
@@ -90,8 +92,10 @@ def signup_api():
         response = db_client.table("users").select('username, password').eq("username", username).execute()
         if response.data and response.data[0]["username"] == username:
             return jsonify({"Success": False, "message": "Invalid username, someone already has this username"}), 401
+
+        hashed_password = bcrypt.generate_password_hash(password)
         
-        response = db_client.table("users").insert({"username": username, "password": password, "email": email}).execute()
+        response = db_client.table("users").insert({"username": username, "password": hashed_password, "email": email}).execute()
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
