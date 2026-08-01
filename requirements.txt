@@ -18,6 +18,7 @@ Flask-Bcrypt==1.0.1
 flask-cors==6.0.5
 fonttools==4.63.0
 fsspec==2026.6.0
+gunicorn==26.0.0
 h11==0.16.0
 h2==4.3.0
 hpack==4.2.0
@@ -36,7 +37,7 @@ multidict==6.7.1
 ncnn==1.0.20260526
 networkx==3.6.1
 numpy==2.5.0
-opencv-python==4.13.0.92
+opencv-python-headless==4.13.0.92
 packaging==26.2
 pillow==12.2.0
 polars==1.42.1

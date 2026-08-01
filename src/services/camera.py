@@ -11,7 +11,7 @@ from src.services.database import log_detection
 from src.services.storage import upload_file
 
 _model = None
-_camera = None
+_camera: cv2.VideoCapture = None
 _camera_lock = threading.Lock()
 
 
