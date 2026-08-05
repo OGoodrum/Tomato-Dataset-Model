@@ -40,5 +40,8 @@
     </footer>
 
 </body>
+<script>
+    window.imageData = {{ image_data | tojson | safe }};
+</script>
 <script type="module" src="/static/historical_images.js"></script>
 </html>

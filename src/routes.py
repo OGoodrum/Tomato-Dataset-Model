@@ -22,7 +22,23 @@ def index():
 @auth_required
 def historical_images():
     """Historical images page."""
-    return render_template("historical_images.html")
+    user = session.get("user")
+    db_client = get_supabase_client()
+
+    
+    try:
+        response = (
+            db_client.from_('tomato_detections')
+            .select('id, created_at, image_url, devices!inner(name, location, users!owner!inner(username))')
+            .eq('devices.users.username', user)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        image_data = response.data
+    except Exception as e:
+        image_data = []
+        print(f"error {e}")
+    return render_template("historical_images.html", image_data=image_data)
 
 
 @bp.route("/notifications.html")
