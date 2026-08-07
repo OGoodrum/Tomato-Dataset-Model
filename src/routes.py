@@ -29,7 +29,7 @@ def historical_images():
     try:
         response = (
             db_client.from_('tomato_detections')
-            .select('id, created_at, image_url, devices!inner(name, location, users!owner!inner(username))')
+            .select('created_at, image_url, devices!inner(name, location, users!owner!inner(username))')
             .eq('devices.users.username', user)
             .order("created_at", desc=True)
             .execute()
@@ -45,7 +45,25 @@ def historical_images():
 @auth_required
 def live_videos():
     """Notifications page."""
-    return render_template("notifications.html")
+    """Historical images page."""
+    user = session.get("user")
+    db_client = get_supabase_client()
+
+    
+    try:
+        response = (
+            db_client.from_('tomato_detections')
+            .select('id, created_at, image_url, total_count, healthy, early_blight, late_blight, leaf_miner, leaf_mold, mosaic_virus, septoria, spider_mites, yellow_leaf_curl_virus, devices!inner(name, location, users!owner!inner(username))')
+            .eq('devices.users.username', user)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        notifications_data = response.data
+    except Exception as e:
+        notifications_data = []
+        print(f"error {e}")
+    
+    return render_template("notifications.html", notifications_data=notifications_data)
 
 
 @bp.route("/statistics.html")

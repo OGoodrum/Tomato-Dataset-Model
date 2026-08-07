@@ -26,9 +26,6 @@
     </nav>
 
     <main>
-        <div id="login_popup" class="modal">
-            <!--Login popup is inserted here-->
-        </div>
 
         <ul class="notification-list" style="list-style: none;">
             <li class="notifications-container">
@@ -42,5 +39,8 @@
     </footer>
 
 </body>
+<script>
+    window.notificationData = {{ notifications_data | tojson | safe }};
+</script>
 <script type="module" src="/static/notifications.js"></script>
 </html>
