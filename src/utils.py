@@ -7,7 +7,7 @@ def auth_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
 
-        if 'user' in session:
+        if 'username' in session:
             return f(*args, **kwargs)
 
         # If unauthenticated request, redirect to login or return 401

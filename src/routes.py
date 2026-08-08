@@ -22,7 +22,7 @@ def index():
 @auth_required
 def historical_images():
     """Historical images page."""
-    user = session.get("user")
+    user = session.get("user_id")
     db_client = get_supabase_client()
 
     
@@ -108,8 +108,8 @@ def login_api():
     try:
         response = db_client.table("users").select('id, username, password').eq("username", username).execute()
         if response.data and bcrypt.check_password_hash(response.data[0]["password"], password):
-            session['user'] = username
-            session['id'] = response.data[0]["id"]
+            session['username'] = username
+            session['user_id'] = response.data[0]["id"]
             return redirect(url_for('main.index'))
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
@@ -150,5 +150,7 @@ def signup_api():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
-    session['user'] = username
+    print(response.data)
+    session['username'] = username
+    session['user_id'] = response.data[0]["id"]
     return redirect(url_for("main.index"))
