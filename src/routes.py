@@ -106,9 +106,10 @@ def login_api():
 
     db_client = get_supabase_client()
     try:
-        response = db_client.table("users").select('username, password').eq("username", username).execute()
+        response = db_client.table("users").select('id, username, password').eq("username", username).execute()
         if response.data and bcrypt.check_password_hash(response.data[0]["password"], password):
             session['user'] = username
+            session['id'] = response.data[0]["id"]
             return redirect(url_for('main.index'))
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
