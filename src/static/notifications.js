@@ -42,6 +42,7 @@ function updateNotifications() {
             statusHtml = `<span class="empty">No tomato leaves detected</span>`;
         }
 
+        //Might need to change the detection event to just the index
         newInnerHTML += `
         <li class="notification-container">
             <div class="notification-text">

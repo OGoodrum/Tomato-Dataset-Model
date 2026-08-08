@@ -70,7 +70,23 @@ def live_videos():
 @auth_required
 def statistics():
     """Statistics page."""
-    return render_template("statistics.html")
+    user = session.get("user")
+    db_client = get_supabase_client()
+
+    
+    try:
+        response = (
+            db_client.from_('tomato_detections')
+            .select('*, devices!inner(name, location, users!owner!inner(username))')
+            .eq('devices.users.username', user)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        statistics_data = response.data
+    except Exception as e:
+        statistics_data = []
+        print(f"error {e}")
+    return render_template("statistics.html", statistics_data=statistics_data)
 
 
 @bp.route("/video_feed")
