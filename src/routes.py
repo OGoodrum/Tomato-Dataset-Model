@@ -22,7 +22,7 @@ def index():
 @auth_required
 def historical_images():
     """Historical images page."""
-    user = session.get("user_id")
+    user = session.get("username")
     db_client = get_supabase_client()
 
     
@@ -46,7 +46,7 @@ def historical_images():
 def live_videos():
     """Notifications page."""
     """Historical images page."""
-    user = session.get("user")
+    user = session.get("username")
     db_client = get_supabase_client()
 
     
@@ -70,7 +70,7 @@ def live_videos():
 @auth_required
 def statistics():
     """Statistics page."""
-    user = session.get("user")
+    user = session.get("username")
     db_client = get_supabase_client()
 
     
