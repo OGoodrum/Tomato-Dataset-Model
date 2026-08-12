@@ -24,7 +24,8 @@ def client(app):
 def logged_in_client(client):
     """A test client with an active authenticated user session"""
     with client.session_transaction() as sess:
-        sess['user'] = 'test_user'
+        sess['username'] = 'test_user'
+        sess['user_id'] = 1
     return client
 
 @pytest.mark.parametrize("route, status_code", [
