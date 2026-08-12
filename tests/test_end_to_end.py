@@ -14,9 +14,30 @@ def generate_flask_session_cookie(username="user", user_id=1):
     serializer = SecureCookieSessionInterface().get_signing_serializer(app_instance)
     return serializer.dumps({"username": username, "user_id": user_id})
 
+import time
+import urllib.request
+
 @pytest.fixture(scope="module", autouse=True)
 def wsgi_server_configuration():
     process = subprocess.Popen([sys.executable, "wsgi.py"])
+
+    # Wait for the server to spin up and listen on port 5000 before yielding
+    timeout = 15
+    start_time = time.time()
+    server_ready = False
+
+    while time.time() - start_time < timeout:
+        try:
+            with urllib.request.urlopen("http://127.0.0.1:5000", timeout=1) as response:
+                if response.status in (200, 302, 404):
+                    server_ready = True
+                    break
+        except Exception:
+            time.sleep(0.5)
+
+    if not server_ready:
+        process.terminate()
+        raise RuntimeError("wsgi.py server failed to start on port 5000 within timeout.")
 
     yield process
 
