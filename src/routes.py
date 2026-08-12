@@ -22,15 +22,16 @@ def index():
 @auth_required
 def historical_images():
     """Historical images page."""
-    user = session.get("username")
+    
+    user_id = session.get("user_id")
     db_client = get_supabase_client()
 
     
     try:
         response = (
             db_client.from_('tomato_detections')
-            .select('created_at, image_url, devices!inner(name, location, users!owner!inner(username))')
-            .eq('devices.users.username', user)
+            .select('created_at, image_url, devices!inner(name, location, owner)')
+            .eq('devices.owner', user_id)
             .order("created_at", desc=True)
             .execute()
         )
@@ -46,15 +47,16 @@ def historical_images():
 def live_videos():
     """Notifications page."""
     """Historical images page."""
-    user = session.get("username")
+
+    user_id = session.get("user_id")
     db_client = get_supabase_client()
 
     
     try:
         response = (
             db_client.from_('tomato_detections')
-            .select('id, created_at, image_url, total_count, healthy, early_blight, late_blight, leaf_miner, leaf_mold, mosaic_virus, septoria, spider_mites, yellow_leaf_curl_virus, devices!inner(name, location, users!owner!inner(username))')
-            .eq('devices.users.username', user)
+            .select('id, created_at, image_url, total_count, healthy, early_blight, late_blight, leaf_miner, leaf_mold, mosaic_virus, septoria, spider_mites, yellow_leaf_curl_virus, devices!inner(name, location, owner)')
+            .eq('devices.owner', user_id)
             .order("created_at", desc=True)
             .execute()
         )
@@ -70,15 +72,16 @@ def live_videos():
 @auth_required
 def statistics():
     """Statistics page."""
-    user = session.get("username")
+
+    user_id = session.get("user_id")
     db_client = get_supabase_client()
 
     
     try:
         response = (
             db_client.from_('tomato_detections')
-            .select('*, devices!inner(name, location, users!owner!inner(username))')
-            .eq('devices.users.username', user)
+            .select('*, devices!inner(name, location, owner)')
+            .eq('devices.owner', user_id)
             .order("created_at", desc=True)
             .execute()
         )
