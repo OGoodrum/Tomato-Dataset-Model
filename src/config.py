@@ -8,9 +8,10 @@ class Config:
     TESTING = False
 
     SECRET_KEY = os.getenv("SECRET_KEY", "default_key")
+    DEVICE_TYPE = os.getenv("DEVICE_TYPE", "pi")
 
     # Sentry Configuration
-    SENTRY_DSN = "https://e80b87c7a6d9121f37069f69b2f53329@o4511668378992640.ingest.us.sentry.io/4511668425785344"
+    SENTRY_DSN = os.getenv("SENTRY_DSN")
 
     # Supabase Configuration
     SUPABASE_URL = os.getenv("SUPABASE_URL")

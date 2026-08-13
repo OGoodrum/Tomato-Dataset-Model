@@ -1,7 +1,6 @@
 from flask import Blueprint, Response, render_template, request, session, jsonify, url_for, redirect
 from flask_bcrypt import Bcrypt
 
-from src.services.camera import generate_frames
 from src.services.database import get_supabase_client
 
 from .utils import auth_required
@@ -91,14 +90,6 @@ def statistics():
         print(f"error {e}")
     return render_template("statistics.html", statistics_data=statistics_data)
 
-
-@bp.route("/video_feed")
-@auth_required
-def video_feed():
-    """Video streaming route. Put this in the src attribute of an img tag."""
-    return Response(
-        generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame"
-    )
 
 @bp.route("/api/login", methods=["POST"])
 def login_api():

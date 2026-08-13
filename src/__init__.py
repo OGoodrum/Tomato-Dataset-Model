@@ -7,7 +7,9 @@ from flask_cors import CORS
 from src.config import Config
 
 
-def create_app(config_class=Config):
+def create_app(config_class=Config, device_type=None):
+    device_type = device_type or os.environ.get("DEVICE_TYPE", "pi")
+
     src_dir = os.path.abspath(os.path.dirname(__file__))
     template_dir = os.path.join(src_dir, 'templates')
     static_dir = os.path.join(src_dir, 'static')
@@ -23,9 +25,12 @@ def create_app(config_class=Config):
             profile_session_sample_rate=1.0,
         )
 
-    CORS(app, resources={r"/video_feed": {"origins": "https://jazzy-basbousa-e19f1f.netlify.app/"}})
+    CORS(app, resources={r"/video_feed": {"origins": ""}})
 
-    from src.routes import bp as main_bp
+    if device_type == "server":
+        from src.routes_server import bp as main_bp
+    elif device_type == "pi":
+        from src.routes_pi import bp as main_bp
     app.register_blueprint(main_bp)
 
     if os.environ.get("WERKZEUG_RUN_MAIN") != "false":
