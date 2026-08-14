@@ -4,6 +4,7 @@ from src.services.camera import generate_frames
 
 bp = Blueprint("main", __name__)
 
+@bp.route("/")
 @bp.route("/video_feed")
 def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""

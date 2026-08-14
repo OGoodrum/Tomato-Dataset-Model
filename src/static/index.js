@@ -1,6 +1,6 @@
 const cameraList = document.querySelector('.cameraList');
 
-let cameraFeeds = ["/video_feed"];
+let cameraFeeds = [""];
 
 function updateCameraFeeds() {
     let newInnerHTML = '';

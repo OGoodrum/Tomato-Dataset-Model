@@ -116,7 +116,8 @@ def login_page():
 
 @bp.route("/api/logout")
 def logout():
-    session.pop('user', None)
+    session.pop('username', None)
+    session.pop('user_id', None)
     return redirect(url_for('main.login_page'))
 
 @bp.route("/signup.html", methods=["GET"])
