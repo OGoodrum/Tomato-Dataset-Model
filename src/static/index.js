@@ -1,6 +1,6 @@
 const cameraList = document.querySelector('.cameraList');
 
-let cameraFeeds = [""];
+let cameraFeeds = ["https://world-conflict-created-passion.trycloudflare.com"];
 
 function updateCameraFeeds() {
     let newInnerHTML = '';
