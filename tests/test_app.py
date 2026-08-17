@@ -11,7 +11,7 @@ def app():
         TESTING = True
         LOG_DATABASE = True
 
-    return create_app(TestingConfig)
+    return create_app(TestingConfig, device_type="server")
 
 
 @pytest.fixture
