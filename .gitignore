@@ -2,9 +2,9 @@
 PlantVillage/
 Tomato leaf diseases dataset for Object Detection/
 temp_snapshot.jpg
-Model Training and Weights/Neural Network
-Model Training and Weights/RandomForestClassifier
-Model Training and Weights/SVCClassifier
+Model Training/Neural Network/
+Model Training/RandomForestClassifier/
+Model Training/SVCClassifier/
 
 # Node Modules
 node_modules/
