@@ -1,9 +1,12 @@
+import logging
+
 from supabase import Client, create_client
 
 from src.config import Config
 
 _supabase_client = None
 
+logger = logging.getLogger(__name__)
 
 def get_supabase_client() -> Client:
     global _supabase_client
@@ -64,8 +67,8 @@ def log_detection(
         # Insert row into Supabase
         client = get_supabase_client()
         response = client.table("tomato_detections").insert(data).execute()
-        print(f"[DB] Logged detection to Supabase: {total} tomatoe leaves found.")
+        logging.info(f"[DB] Logged detection to Supabase: {total} tomatoe leaves found.")
         return response.data
     except Exception as e:
-        print(f"[DB] Error logging to Supabase: {e}")
+        logger.error(f"[DB] Error logging to Supabase: {e}")
         return None

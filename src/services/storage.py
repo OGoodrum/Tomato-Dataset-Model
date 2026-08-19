@@ -1,6 +1,9 @@
+import logging
 import boto3
 
 from src.config import Config
+
+logger = logging.getLogger(__name__)
 
 _s3_client = None
 
@@ -26,4 +29,4 @@ def upload_file(local_path, destination_key):
         Key=destination_key
     )
 
-    print(f"[Storage] Uploaded {local_path} to {destination_key}")
+    logger.info(f"[Storage] Uploaded {local_path} to {destination_key}")
