@@ -1,6 +1,6 @@
 const cameraList = document.querySelector('.cameraList');
 
-let cameraFeeds = ["https://world-conflict-created-passion.trycloudflare.com"];
+let cameraFeeds = ["https://www.tomatoevaluationsystem.ca"];
 
 function updateCameraFeeds() {
     let newInnerHTML = '';
