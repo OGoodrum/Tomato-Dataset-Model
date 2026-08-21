@@ -34,7 +34,7 @@ def create_app(config_class=Config, device_type=None):
     app.register_blueprint(main_bp)
 
     if os.environ.get("WERKZEUG_RUN_MAIN") != "false":
-        if app.config.get("LOG_DATABASE"):
+        if app.config.get("LOG_DATABASE") and device_type == "pi":
             from src.services.camera import start_background_logger
             start_background_logger()
 
