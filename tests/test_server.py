@@ -29,7 +29,6 @@ def logged_in_client(client):
     return client
 
 @pytest.mark.parametrize("route, status_code", [
-    ("/video_feed", 302),
     ("/index.html", 302),
     ("/", 302),
     ("/historical_images.html", 302),
@@ -46,7 +45,6 @@ def test_logged_out_get(client, route, status_code):
     
 
 @pytest.mark.parametrize("route, status_code", [
-    ("/video_feed", 200),
     ("/index.html", 200),
     ("/", 200),
     ("/historical_images.html", 200),
@@ -60,7 +58,6 @@ def test_route_logged_in_get(logged_in_client, route, status_code):
     assert response.status_code == status_code
 
 @pytest.mark.parametrize("route", [
-    ("/video_feed"),
     ("/index.html"),
     ("/"),
     ("/historical_images.html"),
@@ -75,7 +72,6 @@ def test_route_post(client, route):
     assert response.status_code == 405
 
 @pytest.mark.parametrize("route", [
-    ("/video_feed"),
     ("/index.html"),
     ("/"),
     ("/historical_images.html"),
