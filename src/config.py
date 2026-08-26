@@ -9,6 +9,7 @@ class Config:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "default_key")
     DEVICE_TYPE = os.getenv("DEVICE_TYPE", "pi")
+    CAMERA_COUNT = int(os.getenv("CAMERA_COUNT", "1"))
 
     # Sentry Configuration
     SENTRY_DSN = os.getenv("SENTRY_DSN")

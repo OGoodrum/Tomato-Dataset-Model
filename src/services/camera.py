@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 _model = None
 _camera: cv2.VideoCapture = None
+_camera_source: int = None
 _camera_lock = threading.Lock()
 
 
@@ -27,19 +28,20 @@ def get_yolo_model() -> YOLO:
     return _model
 
 
-def get_camera() -> cv2.VideoCapture:
+def get_camera(camera_index: int=0) -> cv2.VideoCapture:
     global _camera
-    if _camera is None:
+    global _camera_source
+    if _camera is None or _camera_source != camera_index:
         logger.info("[Camera] Initializing camera...")
         # Initialize webcam                                                                                                                         
-        _camera = cv2.VideoCapture(0)                                                                                                                   
+        _camera = cv2.VideoCapture(camera_index)                                                                                                                   
         _camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Lower resolutions improve performance                                                             
         _camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     return _camera
 
 
-def generate_frames():
-    cap = get_camera()
+def generate_frames(camera_index:int):
+    cap = get_camera(camera_index)
     model = get_yolo_model()
 
     logger.debug("[DEBUG] Started generate_frames generator...")
