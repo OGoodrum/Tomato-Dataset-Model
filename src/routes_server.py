@@ -14,7 +14,22 @@ bcrypt = Bcrypt()
 @auth_required
 def index():
     """Video streaming home page."""
-    return render_template("index.html")
+
+    user_id = session.get("user_id")
+    db_client = get_supabase_client()
+
+    try:
+        response = (
+            db_client.from_('devices')
+            .select('video_feed_link')
+            .eq('owner', user_id)
+            .execute()
+        )
+        video_links = response.data
+    except Exception as e:
+        video_links = []
+        print(f"error {e}")
+    return render_template("index.html", video_links=video_links)
 
 
 @bp.route("/historical_images.html")

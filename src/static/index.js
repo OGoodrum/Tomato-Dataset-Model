@@ -1,14 +1,14 @@
 const cameraList = document.querySelector('.cameraList');
 
-let cameraFeeds = ["https://tomatoevaluationsystem.ca/video_feed"];
+const cameraFeeds = window.video_links || [];
 
 function updateCameraFeeds() {
     let newInnerHTML = '';
     cameraFeeds.forEach((feed, index) => {
         newInnerHTML += `
         <li class="stream-container">
-            <a href="${feed}" target="_blank">
-                <img src=${feed} width="640" height="480" />
+            <a href="${feed.video_feed_link}" target="_blank">
+                <img src=${feed.video_feed_link} width="640" height="480" />
             </a>
         </li>
         `
