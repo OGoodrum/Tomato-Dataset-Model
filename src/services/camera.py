@@ -33,6 +33,7 @@ def get_camera(camera_index: int=0) -> cv2.VideoCapture:
     global _camera_source
     if _camera is None or _camera_source != camera_index:
         logger.info("[Camera] Initializing camera...")
+        _camera_source = camera_index
         # Initialize webcam                                                                                                                         
         _camera = cv2.VideoCapture(camera_index)                                                                                                                   
         _camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # Lower resolutions improve performance                                                             
