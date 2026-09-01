@@ -4,7 +4,7 @@ from src.services.camera import generate_frames
 
 def test_generate_frames():
     """Test that generate_frames yields formatted MJPEG frame bytes."""
-    gen = generate_frames()
+    gen = generate_frames(0)
     frame = next(gen)
     assert b"--frame" in frame
     assert b"Content-Type: image/jpeg" in frame
